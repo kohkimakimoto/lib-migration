@@ -8,7 +8,7 @@ namespace MigrationLib;
  * @author kohkimakimoto <kohki.makimoto@gmail.com>
  * @version $Revision$
  */
-class MigrationUtils
+class Utils
 {
   /**
    * Gets largest length of the array.
