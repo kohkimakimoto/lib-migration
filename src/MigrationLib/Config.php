@@ -21,7 +21,7 @@ class Config
 
   public function __construct($config = array())
   {
-    $this->marge($config);
+    $this->merge($config);
   }
 
   /**
@@ -54,10 +54,10 @@ class Config
   }
 
   /**
-   * Marge config array.
+   * Merge config array.
    * @param unknown $path
    */
-  public function marge($arr)
+  public function merge($arr)
   {
     $this->config = array_merge($this->config, $arr);
   }

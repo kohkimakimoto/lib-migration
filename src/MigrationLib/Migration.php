@@ -27,14 +27,20 @@ class Migration
   public function __construct($config = array())
   {
     $this->config = new Config($config);
-    $this->logger = new Logger($this->config);
-
     $this->initialize();
+
+    $this->logger = new Logger($this->config);
   }
 
   public function initialize()
   {
-
+    $config_file = $this->config->get('config_file');
+    if ($config_file) {
+      if (!file_exists($config_file)) {
+        throw  new Exception("$config_file is not found.");
+      }
+      $this->config->merge(array_merge(include $config_file, $this->config->getAll()));
+    }
   }
 
   /**
@@ -143,21 +149,21 @@ class Migration
     foreach ($databases as $database) {
       $version = $this->getSchemaVersion($database);
       if ($version !== null) {
-        MigrationLogger::log("[".$database."] Current schema version is ".$version);
+        $this->logger->write("[".$database."] Current schema version is ".$version);
       }
 
       $files = $this->getValidMigrationUpFileList($version);
       if (count($files) === 0) {
-        MigrationLogger::log("[".$database."] Already up to date.");
+        $this->logger->write("[".$database."] Already up to date.");
         continue;
       }
 
-      MigrationLogger::log("[".$database."] Your migrations yet to be executed are below.");
-      MigrationLogger::log("");
+      $this->logger->write("[".$database."] Your migrations yet to be executed are below.");
+      $this->logger->write("");
       foreach ($files as $file) {
-        MigrationLogger::log(basename($file));
+        $this->logger->write(basename($file));
       }
-      MigrationLogger::log("");
+      $this->logger->write("");
     }
 
   }
@@ -230,7 +236,7 @@ EOF;
 
     file_put_contents($filename, $content);
 
-    MigrationLogger::log("Created ".$filename);
+    $this->logger->write("Created ".$filename);
   }
 
   /**
@@ -243,12 +249,12 @@ EOF;
       $version = $this->getSchemaVersion($database);
 
       if ($version !== null) {
-        MigrationLogger::log("[".$database."] Current schema version is ".$version);
+        $this->logger->write("[".$database."] Current schema version is ".$version);
       }
 
       $files = $this->getValidMigrationUpFileList($version);
       if (count($files) === 0) {
-        MigrationLogger::log("[".$database."] Already up to date.");
+        $this->logger->write("[".$database."] Already up to date.");
         continue;
       }
 
@@ -268,12 +274,12 @@ EOF;
       $version = $this->getSchemaVersion($database);
 
       if ($version !== null) {
-        MigrationLogger::log("[".$database."] Current schema version is ".$version);
+        $this->logger->write("[".$database."] Current schema version is ".$version);
       }
 
       $files = $this->getValidMigrationUpFileList($version);
       if (count($files) === 0) {
-        MigrationLogger::log("[".$database."] Already up to date.");
+        $this->logger->write("[".$database."] Already up to date.");
         continue;
       }
 
@@ -291,12 +297,12 @@ EOF;
       $version = $this->getSchemaVersion($database);
 
       if ($version !== null) {
-        MigrationLogger::log("[".$database."] Current schema version is ".$version);
+        $this->logger->write("[".$database."] Current schema version is ".$version);
       }
 
       $files = $this->getValidMigrationDownFileList($version);
       if (count($files) === 0) {
-        MigrationLogger::log("[".$database."] Not found older migration files than current schema version.");
+        $this->logger->write("[".$database."] Not found older migration files than current schema version.");
         continue;
       }
 
@@ -314,7 +320,7 @@ EOF;
 
   protected function migrateUp($file, $database)
   {
-    MigrationLogger::log("[".$database."] Proccesing migrate up by ".basename($file)."");
+    $this->logger->write("[".$database."] Proccesing migrate up by ".basename($file)."");
 
     require_once $file;
 
@@ -354,7 +360,7 @@ EOF;
       $prev_version = 0;
     }
 
-    MigrationLogger::log("[".$database."] Proccesing migrate down to version $prev_version by ".basename($file)."");
+    $this->logger->write("[".$database."] Proccesing migrate down to version $prev_version by ".basename($file)."");
 
     require_once $file;
 
@@ -507,7 +513,7 @@ EOF;
 
   protected function getSchemaVersion($database)
   {
-    MigrationLogger::log("Getting schema version from '$database'", "debug");
+    $this->logger->write("Getting schema version from '$database'", "debug");
     if ($this->isCliExecution($database)) {
       // cli
       $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
@@ -517,7 +523,7 @@ EOF;
 
       // Check to exist table.
       if (count($arr) == 0) {
-        MigrationLogger::log("Table [".$table."] is not found. This schema hasn't been managed yet by PHPMigrate.", "debug");
+        $this->logger->write("Table [".$table."] is not found. This schema hasn't been managed yet by PHPMigrate.", "debug");
         return null;
       }
 
@@ -543,7 +549,7 @@ EOF;
 
       // Check to exist table.
       if (count($arr) == 0) {
-        MigrationLogger::log("Table [".$table."] is not found. This schema hasn't been managed yet by PHPMigrate.", "debug");
+        $this->logger->write("Table [".$table."] is not found. This schema hasn't been managed yet by PHPMigrate.", "debug");
         return null;
       }
 
@@ -641,14 +647,14 @@ EOF;
   {
     $path = $this->getTmpSqlFilePath($sql, $database);
 
-    MigrationLogger::log("Executing sql is the following \n".$sql, "debug");
-    MigrationLogger::log("Creating temporary sql file to [".$path."]", "debug");
+    $this->logger->write("Executing sql is the following \n".$sql, "debug");
+    $this->logger->write("Creating temporary sql file to [".$path."]", "debug");
     file_put_contents($path, $sql);
 
     $clibase = $this->getCliBase($database);
 
     $cmd = $clibase." < ".$path."  2>&1";
-    MigrationLogger::log("Executing command is [".$cmd."]", "debug");
+    $this->logger->write("Executing command is [".$cmd."]", "debug");
 
     //$output = shell_exec($cmd);
     exec($cmd, $output, $return_var);

@@ -68,7 +68,6 @@ class Cli
     $cwd = getcwd();
 
     $migration = new Migration(array(
-      'migration_dir' => $cwd,
       'config_file' => $config_file,
       'debug' => $debug,
     ));
