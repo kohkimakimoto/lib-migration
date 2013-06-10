@@ -91,7 +91,7 @@ class Migration
    */
   public function help()
   {
-    $this->logger->write("MigrationLib is a minimum migration tool library and command line tool. version ".self::VERSION);
+    $this->logger->write("MigrationLib is a minimum migration library and command line tool for MySQL. version ".self::VERSION);
     $this->logger->write("");
     $this->logger->write("Copyright (c) Kohki Makimoto <kohki.makimoto@gmail.com>");
     $this->logger->write("Apache License 2.0");
