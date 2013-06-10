@@ -37,49 +37,35 @@ class Migration
    */
   public function execute($command, $arguments)
   {
-    try {
+    $this->command   = $command;
+    $this->arguments = $arguments;
 
-      $this->command   = $command;
-      $this->arguments = $arguments;
+    if ($this->command == 'help') {
 
-      if ($this->command == 'help') {
+      $this->help();
 
-        $this->help();
+    } elseif ($this->command == 'status') {
 
-      } elseif ($this->command == 'status') {
+      $this->status();
 
-        $this->runStatus();
+    } elseif ($this->command == 'create') {
 
-      } elseif ($this->command == 'create') {
+      $this->create();
 
-        $this->runCreate();
+    } elseif ($this->command == 'migrate') {
 
-      } elseif ($this->command == 'migrate') {
+      $this->migrate();
 
-        $this->runMigrate();
+    } elseif ($this->command == 'up') {
 
-      } elseif ($this->command == 'up') {
+      $this->up();
 
-        $this->runUp();
+    } elseif ($this->command == 'down') {
 
-      } elseif ($this->command == 'down') {
+      $this->down();
 
-        $this->runDown();
-
-      } else {
-        fputs(STDERR, 'Unknown command: '.$this->command."\n");
-        exit(1);
-      }
-
-    } catch (Exception $e) {
-
-      if (Config::get('debug')) {
-        fputs(STDERR, $e);
-      } else {
-        fputs(STDERR, $e->getMessage()."\n");
-      }
-
-      exit(1);
+    } else {
+      throw new Exception('Unknown command: '.$this->command);
     }
   }
 

@@ -65,6 +65,14 @@ class Cli
       'debug' => $debug,
     ));
 
-    $migration->execute($command, $arguments);
+    try {
+      $migration->execute($command, $arguments);
+    } catch (\Exception $e) {
+      if ($debug) {
+        fputs(STDERR, $e);
+      } else {
+        fputs(STDERR, $e->getMessage()."\n");
+      }
+    }
   }
 }
