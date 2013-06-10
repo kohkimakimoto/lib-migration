@@ -28,6 +28,13 @@ class Migration
   {
     $this->config = new Config($config);
     $this->logger = new Logger($this->config);
+
+    $this->initialize();
+  }
+
+  public function initialize()
+  {
+
   }
 
   /**
@@ -389,7 +396,7 @@ EOF;
 
     if ($this->isCliExecution($database)) {
       // cli
-      $table = Config::get('databases/'.$database.'/schema_version_table', 'schema_version');
+      $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
       $sql = "show tables like '".$table."'";
 
       $arr = $this->execUsingCli($sql, $database);
@@ -425,7 +432,7 @@ EOF;
       // pdo
       $conn = $this->getConnection($database);
 
-      $table = Config::get('databases/'.$database.'/schema_version_table', 'schema_version');
+      $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
       $sql = "show tables like '".$table."'";
       $stmt = $conn->prepare($sql);
       $stmt->execute();
@@ -480,7 +487,12 @@ EOF;
 
   protected function getDatabaseNames()
   {
-    return array_keys(Config::get('databases'));
+    $database = $this->config->get('databases');
+    if (!$database) {
+      throw new Exception("Database settings are not found.");
+    }
+
+    return array_keys($database);
   }
 
   protected function validateDatabaseNames($databases)
@@ -498,7 +510,7 @@ EOF;
     MigrationLogger::log("Getting schema version from '$database'", "debug");
     if ($this->isCliExecution($database)) {
       // cli
-      $table = Config::get('databases/'.$database.'/schema_version_table', 'schema_version');
+      $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
       $sql = "show tables like '".$table."'";
 
       $arr = $this->execUsingCli($sql, $database);
@@ -522,7 +534,7 @@ EOF;
 
       $conn = $this->getConnection($database);
 
-      $table = Config::get('databases/'.$database.'/schema_version_table', 'schema_version');
+      $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
       $sql = "show tables like '".$table."'";
       $stmt = $conn->prepare($sql);
       $stmt->execute();
@@ -556,9 +568,9 @@ EOF;
   protected function getConnection($database)
   {
     if (!@$this->conns[$database]) {
-      $dsn      = Config::get('databases/'.$database.'/database_dsn');
-      $user     = Config::get('databases/'.$database.'/database_user');
-      $password = Config::get('databases/'.$database.'/database_password');
+      $dsn      = $this->config->get('databases/'.$database.'/database_dsn');
+      $user     = $this->config->get('databases/'.$database.'/database_user');
+      $password = $this->config->get('databases/'.$database.'/database_password');
 
       $this->conns[$database] = new PDO($dsn, $user, $password);
       $this->conns[$database]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -576,13 +588,13 @@ EOF;
   {
     if (!@$this->cli_bases[$database]) {
       $this->cli_bases[$database] =
-      Config::get('databases/'.$database.'/mysql_command_cli', 'mysql')
-      ." -u".Config::get('databases/'.$database.'/mysql_command_user')
-      ." -p".Config::get('databases/'.$database.'/mysql_command_password')
-      ." -h".Config::get('databases/'.$database.'/mysql_command_host')
+      $this->config->get('databases/'.$database.'/mysql_command_cli', 'mysql')
+      ." -u".$this->config->get('databases/'.$database.'/mysql_command_user')
+      ." -p".$this->config->get('databases/'.$database.'/mysql_command_password')
+      ." -h".$this->config->get('databases/'.$database.'/mysql_command_host')
       ." --batch -N"
-          ." ".Config::get('databases/'.$database.'/mysql_command_options')
-          ." ".Config::get('databases/'.$database.'/mysql_command_database')
+          ." ".$this->config->get('databases/'.$database.'/mysql_command_options')
+          ." ".$this->config->get('databases/'.$database.'/mysql_command_database')
           ;
     }
 
@@ -594,18 +606,18 @@ EOF;
    */
   protected function isCliExecution($database)
   {
-    $ret = Config::get('databases/'.$database.'/mysql_command_enable', false);
+    $ret = $this->config->get('databases/'.$database.'/mysql_command_enable', false);
     if ($ret) {
-      if (!Config::get('databases/'.$database.'/mysql_command_user')) {
+      if (!$this->config->get('databases/'.$database.'/mysql_command_user')) {
         throw new Exception("You are using mysql_command. so config [mysql_command_user] is required.");
       }
-      if (!Config::get('databases/'.$database.'/mysql_command_host')) {
+      if (!$this->config->get('databases/'.$database.'/mysql_command_host')) {
         throw new Exception("You are using mysql_command. so config [mysql_command_host] is required.");
       }
-      if (!Config::get('databases/'.$database.'/mysql_command_password')) {
+      if (!$this->config->get('databases/'.$database.'/mysql_command_password')) {
         throw new Exception("You are using mysql_command. so config [mysql_command_password] is required.");
       }
-      if (!Config::get('databases/'.$database.'/mysql_command_database')) {
+      if (!$this->config->get('databases/'.$database.'/mysql_command_database')) {
         throw new Exception("You are using mysql_command. so config [mysql_command_database] is required.");
       }
     }
@@ -615,7 +627,7 @@ EOF;
 
   protected function getTmpSqlFilePath($sql, $database)
   {
-    $dir = Config::get('databases/'.$database.'/mysql_command_tmpdir', '/tmp');
+    $dir = $this->config->get('databases/'.$database.'/mysql_command_tmpdir', '/tmp');
     $prefix = $database.'_'.md5($sql);
     $uniqid = uniqid();
 
