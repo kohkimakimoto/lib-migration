@@ -17,16 +17,21 @@ class Config
    * Array of configuration values.
    * @var unknown
    */
-  protected static $config = array();
+  protected $config = array();
+
+  public function __construct($config = array())
+  {
+    $this->marge($config);
+  }
 
   /**
    * Get a config parameter.
    * @param unknown $name
    * @param string $default
   */
-  public static function get($name, $default = null, $delimiter = '/')
+  public function get($name, $default = null, $delimiter = '/')
   {
-    $config = self::$config;
+    $config = $this->config;
     foreach (explode($delimiter, $name) as $key) {
       $config = isset($config[$key]) ? $config[$key] : $default;
     }
@@ -38,48 +43,48 @@ class Config
    * @param unknown $name
    * @param unknown $value
    */
-  public static function set($name, $value)
+  public function set($name, $value)
   {
-    self::$config[$name] = $value;
+    $this->config[$name] = $value;
   }
 
-  public static function delete($name)
+  public function delete($name)
   {
-    unset(self::$config[$name]);
+    unset($this->config[$name]);
   }
 
   /**
-   * Load configurations from a file.
+   * Marge config array.
    * @param unknown $path
    */
-  public static function marge($arr)
+  public function marge($arr)
   {
-    self::$config = array_merge(self::$config, $arr);
+    $this->config = array_merge($this->config, $arr);
   }
 
   /**
    * Get All config parameters.
    * @return multitype:
    */
-  public static function getAll()
+  public function getAll()
   {
-    return self::$config;
+    return $this->config;
   }
 
-  public static function getAllOnFlatArray($namespace = null, $key = null, $array = null, $delimiter = '/')
+  public function getAllOnFlatArray($namespace = null, $key = null, $array = null, $delimiter = '/')
   {
     $ret = array();
 
     if ($array === null) {
-      $array = self::$config;
+      $array = $this->config;
     }
 
     foreach ($array as $key => $val) {
       if (is_array($val) && $val) {
         if ($namespace === null) {
-          $ret = array_merge($ret, self::getAllOnFlatArray($key, $key, $val, $delimiter));
+          $ret = array_merge($ret, $this->getAllOnFlatArray($key, $key, $val, $delimiter));
         } else {
-          $ret = array_merge($ret, self::getAllOnFlatArray($namespace.$delimiter.$key, $key, $val, $delimiter));
+          $ret = array_merge($ret, $this->getAllOnFlatArray($namespace.$delimiter.$key, $key, $val, $delimiter));
         }
       } else {
         if ($namespace !== null) {

@@ -11,16 +11,23 @@ namespace MigrationLib;
  *
  * @author kohkimakimoto <kohki.makimoto@gmail.com>
  */
-class MigrationLogger
+class Logger
 {
-  public static function log($msg, $level = 'info')
+  protected $config;
+
+  public function __construct($config)
   {
-    if (!MigrationConfig::get('log', true)) {
+    $this->config = $config;
+  }
+
+  public function write($msg, $level = 'info')
+  {
+    if (!$this->config->get('log', true)) {
       return;
     }
 
     if ($level == 'debug') {
-      if (MigrationConfig::get('debug')) {
+      if ($this->config->get('debug')) {
         echo "DEBUG >> ".$msg."\n";
       }
     } else {
@@ -28,9 +35,3 @@ class MigrationLogger
     }
   }
 }
-
-if (realpath($_SERVER['SCRIPT_FILENAME']) === __FILE__) {
-  // Run the main program logic, when this script file is directly executed.
-  Migration::main();
-}
-
