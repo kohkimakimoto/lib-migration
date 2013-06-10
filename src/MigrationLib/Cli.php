@@ -65,14 +65,12 @@ class Cli
       $command = 'help';
     }
 
-    $cwd = getcwd();
-
-    $migration = new Migration(array(
-      'config_file' => $config_file,
-      'debug' => $debug,
-    ));
-
     try {
+
+      $migration = new Migration(array(
+        'config_file' => $config_file,
+        'debug' => $debug,
+      ));
 
       $migration->execute($command, $arguments);
 
