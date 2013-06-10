@@ -1,0 +1,21 @@
+{
+  "name": "kohkimakimoto/migration-lib",
+  "description": "This is a minimum database migration tool library for MySQL.",
+  "keywords": ["migrations", "db", "database", "mysql"],
+  "homepage": "https://github.com/kohkimakimoto/migration-lib",
+  "license": "Apache License 2.0",
+  "authors": [
+    {
+      "name": "Kohki Makimoto",
+      "email": "kohki.makimoto@gmail.com",
+      "homepage": "http://kohkimakimoto.hatenablog.com/"
+    }
+  ],
+  "autoload": {
+    "psr-0": { "MigrationLib": "src/" }
+  },
+  "require": {
+    "php": ">=5.3.0"
+  }
+
+}
