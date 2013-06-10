@@ -44,6 +44,10 @@ class Migration
 
       $this->help();
 
+    } elseif ($this->command == 'config') {
+
+        $this->listConfig();
+
     } elseif ($this->command == 'status') {
 
       $this->status();
@@ -75,6 +79,32 @@ class Migration
   public function help()
   {
     $this->logger->write("MigrationLib is a minimum migration tool library. version ".self::VERSION);
+  }
+
+  /**
+   * List config
+   */
+  public function listConfig()
+  {
+    $largestLength = Utils::arrayKeyLargestLength($this->config->getAllOnFlatArray());
+    $this->logger->write("");
+    $this->logger->write("Configurations :");
+    foreach ($this->config->getAllOnFlatArray() as $key => $val) {
+      if ($largestLength === strlen($key)) {
+        $sepalator = str_repeat(" ", 0);
+      } else {
+        $sepalator = str_repeat(" ", $largestLength - strlen($key));
+      }
+
+      $message = "  [".$key."] ".$sepalator;
+      if (is_array($val)) {
+        $message .= "=> array()";
+      } else {
+        $message .= "=> ".$val;
+      }
+      $this->logger->write($message);
+    }
+    $this->logger->write("");
   }
 
   /**
@@ -669,31 +699,6 @@ EOF;
     return $files;
   }
 
-  /**
-   * List config
-   */
-  protected function listConfig()
-  {
-    $largestLength = MigrationUtils::arrayKeyLargestLength(Config::getAllOnFlatArray());
-    echo "\n";
-    echo "Configurations :\n";
-    foreach (Config::getAllOnFlatArray() as $key => $val) {
-      if ($largestLength === strlen($key)) {
-        $sepalator = str_repeat(" ", 0);
-      } else {
-        $sepalator = str_repeat(" ", $largestLength - strlen($key));
-      }
-
-      echo "  [".$key."] ";
-      echo $sepalator;
-      if (is_array($val)) {
-        echo "=> array()\n";
-      } else {
-        echo "=> ".$val."\n";
-      }
-    }
-    echo "\n";
-  }
 }
 
 
