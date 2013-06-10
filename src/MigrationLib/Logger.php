@@ -1,14 +1,15 @@
 <?php
-
+/**
+ * MigrationLib
+ *
+ * @package    MigrationLib
+ */
 namespace MigrationLib;
-
-
 
 /**
  * Migration Logger Class
  *
  * @author kohkimakimoto <kohki.makimoto@gmail.com>
- * @version $Revision$
  */
 class MigrationLogger
 {

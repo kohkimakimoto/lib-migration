@@ -1,11 +1,15 @@
 <?php
+/**
+ * MigrationLib
+ *
+ * @package    MigrationLib
+ */
 namespace MigrationLib;
 
 /**
  * Migration Connfig Class
  *
  * @author kohkimakimoto <kohki.makimoto@gmail.com>
- * @version $Revision$
  */
 class Config
 {

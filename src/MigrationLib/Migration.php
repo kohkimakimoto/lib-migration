@@ -1,12 +1,16 @@
 <?php
+/**
+ * MigrationLib
+ *
+ * @package    MigrationLib
+ */
 namespace MigrationLib;
 
 /**
  * Migration Class
  *
  * @author kohkimakimoto <kohki.makimoto@gmail.com>
- * @version $Revision$
-*/
+ */
 class Migration
 {
   const VERSION = '2.0.1';
