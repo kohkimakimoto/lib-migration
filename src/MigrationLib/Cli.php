@@ -18,7 +18,7 @@ class Cli
    */
   public static function main()
   {
-    $options = getopt("hdc");
+    $options = getopt("hdcf:");
     $argv = $_SERVER['argv'];
     $raw_arguments = $argv;
     $command = null;
@@ -40,7 +40,9 @@ class Cli
       if ('-' == substr($raw_argument, 0, 1)) {
 
       } else {
-        $arguments[] = $raw_argument;
+        if ($argv[$i] !== '-f') {
+          $arguments[] = $raw_argument;
+        }
       }
       $i++;
     }
@@ -54,6 +56,11 @@ class Cli
       $command = 'config';
     }
 
+    $config_file = 'migrate.php';
+    if (isset($options['f'])) {
+      $config_file = $options['f'];
+    }
+
     if (!$command) {
       $command = 'help';
     }
@@ -62,11 +69,14 @@ class Cli
 
     $migration = new Migration(array(
       'migration_dir' => $cwd,
+      'config_file' => $config_file,
       'debug' => $debug,
     ));
 
     try {
+
       $migration->execute($command, $arguments);
+
     } catch (\Exception $e) {
       if ($debug) {
         fputs(STDERR, $e);

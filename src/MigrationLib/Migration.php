@@ -31,7 +31,7 @@ class Migration
   }
 
   /**
-   * Execute.
+   * Facade method for cli executing.
    * @param unknown $task
    * @param unknown $options
    */
@@ -78,7 +78,27 @@ class Migration
    */
   public function help()
   {
-    $this->logger->write("MigrationLib is a minimum migration tool library. version ".self::VERSION);
+    $this->logger->write("MigrationLib is a minimum migration tool library and command line tool. version ".self::VERSION);
+    $this->logger->write("");
+    $this->logger->write("Copyright (c) Kohki Makimoto <kohki.makimoto@gmail.com>");
+    $this->logger->write("Apache License 2.0");
+    $this->logger->write("");
+    $this->logger->write("Usage");
+    $this->logger->write("  phpmigrate [-h|-d|-c] COMMAND");
+    $this->logger->write("");
+    $this->logger->write("Options:");
+    $this->logger->write("  -d         : Switch the debug mode to output log on the debug level.");
+    $this->logger->write("  -h         : List available command line options (this page).");
+    $this->logger->write("  -f=FILE    : Specify to load configuration file (default migrate.php).");
+    $this->logger->write("  -c         : List configurations.");
+    $this->logger->write("");
+    $this->logger->write("Commands:");
+    $this->logger->write("  create NAME                   : Create new skeleton migration task file.");
+    $this->logger->write("  status [DATABASENAME ...]     : List the migrations yet to be executed.");
+    $this->logger->write("  migrate [DATABASENAME ...]    : Execute the next migrations up.");
+    $this->logger->write("  up [DATABASENAME ...]         : Execute the next migration up.");
+    $this->logger->write("  down [DATABASENAME ...]       : Execute the next migration down.");
+    $this->logger->write("");
   }
 
   /**
