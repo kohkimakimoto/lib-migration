@@ -171,7 +171,7 @@ class Migration
   /**
    * Run Create Command
    */
-  protected function runCreate()
+  public function create()
   {
     if (count($this->arguments) > 0) {
       $name = $this->arguments[0];
@@ -179,10 +179,10 @@ class Migration
       throw new Exception("You need to pass the argument for migration name. (ex php ".basename(__FILE__)." create foo");
     }
 
-    $timestamp = new DateTime();
+    $timestamp = new \DateTime();
     $filename = $timestamp->format('YmdHis')."_".$name.".php";
     $filepath = __DIR__."/".$filename;
-    $camelize_name = MigrationUtils::camelize($name);
+    $camelize_name = Utils::camelize($name);
 
     $content = <<<EOF
 <?php
@@ -242,7 +242,7 @@ EOF;
   /**
    * Run Migrate Command
    */
-  protected function runMigrate()
+  public function migrate()
   {
     $databases = $this->getValidDatabases($this->arguments);
     foreach ($databases as $database) {
@@ -267,7 +267,7 @@ EOF;
   /**
    * Run Up Command
    */
-  protected function runUp()
+  public function up()
   {
     $databases = $this->getValidDatabases($this->arguments);
     foreach ($databases as $database) {
@@ -290,7 +290,7 @@ EOF;
   /**
    * Run Down Command
    */
-  protected function runDown()
+  public function down()
   {
     $databases = $this->getValidDatabases($this->arguments);
     foreach ($databases as $database) {
@@ -326,7 +326,7 @@ EOF;
 
     preg_match("/(\d+)_(.*)\.php$/", basename($file), $matches);
     $version    = $matches[1];
-    $class_name = MigrationUtils::camelize($matches[2]);
+    $class_name = Utils::camelize($matches[2]);
 
     $migrationInstance = new $class_name();
 
@@ -366,7 +366,7 @@ EOF;
 
     preg_match("/(\d+)_(.*)\.php$/", basename($file), $matches);
     $version    = $matches[1];
-    $class_name = MigrationUtils::camelize($matches[2]);
+    $class_name = Utils::camelize($matches[2]);
 
     $migrationInstance = new $class_name();
 
@@ -720,7 +720,7 @@ EOF;
 
         preg_match("/(\d+)_(.*)\.php$/", basename($file), $matches);
         $version    = $matches[1];
-        $class_name = MigrationUtils::camelize($matches[2]);
+        $class_name = Utils::camelize($matches[2]);
 
         // Check to exist same class name.
         if (array_key_exists($class_name, $classes)) {
