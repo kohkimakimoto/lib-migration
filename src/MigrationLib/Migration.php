@@ -32,7 +32,7 @@ class Migration
     $this->logger = new Logger($this->config);
   }
 
-  public function initialize()
+  protected function initialize()
   {
     $config_file = $this->config->get('config_file');
     if ($config_file) {
