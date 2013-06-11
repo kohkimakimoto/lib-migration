@@ -479,7 +479,7 @@ EOF;
     }
   }
 
-  public function getValidDatabases($databases)
+  protected function getValidDatabases($databases)
   {
     $valid_databases = array();
     if (!$databases) {
