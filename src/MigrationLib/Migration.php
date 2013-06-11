@@ -14,6 +14,7 @@ namespace MigrationLib;
 class Migration
 {
   const VERSION = '1.0.0';
+  const DEFAULT_CONFIG_FILE = 'migrate.php';
 
   protected $config;
   protected $arguments;
@@ -23,6 +24,7 @@ class Migration
 
   protected $conns = array();
   protected $cli_bases = array();
+
 
   public function __construct($config = array())
   {
@@ -55,6 +57,10 @@ class Migration
     if ($this->command == 'help') {
 
       $this->help();
+
+    } elseif ($this->command == 'init') {
+
+      $this->init();
 
     } elseif ($this->command == 'config') {
 
@@ -316,6 +322,45 @@ EOF;
 
   }
 
+  public function init()
+  {
+    $cwd = getcwd();
+    $configpath = $cwd.'/'.self::DEFAULT_CONFIG_FILE;
+    if (file_exists($configpath)) {
+      throw new Exception("Exists $configpath");
+    }
+
+    $cotent = <<<END
+<?php
+return array(
+  'databases' => array(
+    'yourdatabase' => array(
+      // PDO Connection settings.
+      'database_dsn'      => 'mysql:dbname=yourdatabase;host=localhost',
+      'database_user'     => 'user',
+      'database_password' => 'password',
+
+      // mysql client command settings.
+      'mysql_command_enable'    => true,
+      'mysql_command_cli'       => "/usr/bin/mysql",
+      'mysql_command_tmpsqldir' => "/tmp",
+      'mysql_command_host'      => "localhost",
+      'mysql_command_user'      => "user",
+      'mysql_command_password'  => "password",
+      'mysql_command_database'  => "yourdatabase",
+      'mysql_command_options'   => "--default-character-set=utf8",
+
+      // schema version table
+      'schema_version_table' => 'schema_version'
+    ),
+  ),
+);
+
+END;
+
+    file_put_contents($configpath, $cotent);
+    $this->logger->write("Create configuration file to $configpath");
+  }
 
   protected function migrateUp($file, $database)
   {
