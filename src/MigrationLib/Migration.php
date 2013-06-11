@@ -737,9 +737,18 @@ EOF;
 
   protected function getMigrationFileList()
   {
+    $migration_dir = $this->config->get('migration_dir');
+
     $files = array();
     $classes = array();
-    $gfiles = glob('*');
+
+    $gfiles = array();
+    if ($migration_dir) {
+      $gfiles = glob($migration_dir.'/*');
+    } else {
+      $gfiles = glob('*');
+    }
+
     foreach ($gfiles as $file) {
       if (preg_match("/^\d+_.+\.php$/", $file)) {
 
