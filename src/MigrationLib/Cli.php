@@ -18,6 +18,24 @@ class Cli
    */
   public static function main()
   {
+    list($command, $arguments, $config) = self::preProcess();
+
+    try {
+
+      $cli = new Cli();
+      $cli->execute($command, $arguments, $config);
+
+    } catch (\Exception $e) {
+      if (isset($config['debug']) && $config['debug']) {
+        fputs(STDERR, $e);
+      } else {
+        fputs(STDERR, $e->getMessage()."\n");
+      }
+    }
+  }
+
+  public static function preProcess()
+  {
     $options = getopt("hdcf:");
     $argv = $_SERVER['argv'];
     $raw_arguments = $argv;
@@ -65,21 +83,72 @@ class Cli
       $command = 'help';
     }
 
-    try {
-
-      $migration = new Migration(array(
+    $config = array(
         'config_file' => $config_file,
         'debug' => $debug,
-      ));
+    );
 
-      $migration->execute($command, $arguments);
+    return array(
+      $command,
+      $arguments,
+      $config
+    );
+  }
 
-    } catch (\Exception $e) {
-      if ($debug) {
-        fputs(STDERR, $e);
+  /**
+   * Execute
+   * @param unknown $task
+   * @param unknown $options
+   */
+  public function execute($command, $arguments, $config)
+  {
+    $migration = new Migration($config);
+
+    if ($command == 'help') {
+
+      $migration ->help();
+
+    } elseif ($command == 'init') {
+
+      $migration ->init();
+
+    } elseif ($command == 'config') {
+
+      $migration ->listConfig();
+
+    } elseif ($command == 'create') {
+
+      if (count($arguments) > 0) {
+        $name = $arguments[0];
       } else {
-        fputs(STDERR, $e->getMessage()."\n");
+        throw new Exception("You need to pass the argument for migration task name.");
       }
+
+      $migration ->create($name);
+
+    } elseif ($command == 'status') {
+
+      // arguments are database names to be processed.
+      $migration ->status($arguments);
+
+    } elseif ($command == 'migrate') {
+
+      // arguments are database names to be processed.
+      $migration ->migrate($arguments);
+
+    } elseif ($command == 'up') {
+
+      // arguments are database names to be processed.
+      $migration ->up($arguments);
+
+    } elseif ($command == 'down') {
+
+      // arguments are database names to be processed.
+      $migration ->down($arguments);
+
+    } else {
+      throw new Exception('Unknown command: '.$command);
     }
   }
+
 }

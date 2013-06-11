@@ -17,7 +17,6 @@ class Migration
   const DEFAULT_CONFIG_FILE = 'migration.php';
 
   protected $config;
-  protected $arguments;
   protected $command;
 
   protected $logger;
@@ -41,63 +40,6 @@ class Migration
       if (file_exists($config_file)) {
         $this->config->merge(array_merge(include $config_file, $this->config->getAll()));
       }
-    }
-  }
-
-  /**
-   * Facade method for cli executing.
-   * @param unknown $task
-   * @param unknown $options
-   */
-  public function execute($command, $arguments)
-  {
-    $this->command   = $command;
-    $this->arguments = $arguments;
-
-    if ($this->command == 'help') {
-
-      $this->help();
-
-    } elseif ($this->command == 'init') {
-
-      $this->init();
-
-    } elseif ($this->command == 'config') {
-
-      $this->listConfig();
-
-    } elseif ($this->command == 'create') {
-
-      if (count($arguments) > 0) {
-        $name = $arguments[0];
-      } else {
-        throw new Exception("You need to pass the argument for migration task name.");
-      }
-
-      $this->create($name);
-
-    } elseif ($this->command == 'status') {
-
-      // arguments are database names to be processed.
-      $this->status($arguments);
-
-    } elseif ($this->command == 'migrate') {
-
-      // arguments are database names to be processed.
-      $this->migrate($arguments);
-
-    } elseif ($this->command == 'up') {
-
-      // arguments are database names to be processed.
-      $this->up($arguments);
-
-    } elseif ($this->command == 'down') {
-
-      // arguments are database names to be processed.
-      $this->down($arguments);
-
-    } else {
-      throw new Exception('Unknown command: '.$this->command);
     }
   }
 
