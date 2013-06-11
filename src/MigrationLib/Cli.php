@@ -106,7 +106,7 @@ class Cli
 
     if ($command == 'help') {
 
-      $migration ->help();
+      $migration ->helpForCli();
 
     } elseif ($command == 'init') {
 

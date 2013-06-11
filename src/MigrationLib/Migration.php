@@ -46,7 +46,7 @@ class Migration
   /**
    * Run Helps Command
    */
-  public function help()
+  public function helpForCli()
   {
     $this->logger->write("MigrationLib is a minimum migration library and command line tool for MySQL. version ".self::VERSION);
     $this->logger->write("");
@@ -68,6 +68,7 @@ class Migration
     $this->logger->write("  migrate [DATABASENAME ...]    : Execute the next migrations up.");
     $this->logger->write("  up [DATABASENAME ...]         : Execute the next migration up.");
     $this->logger->write("  down [DATABASENAME ...]       : Execute the next migration down.");
+    $this->logger->write("  init                          : Create skelton configuration file in the current working directory.");
     $this->logger->write("");
   }
 
@@ -596,8 +597,8 @@ EOF;
       $user     = $this->config->get('databases/'.$database.'/database_user');
       $password = $this->config->get('databases/'.$database.'/database_password');
 
-      $this->conns[$database] = new PDO($dsn, $user, $password);
-      $this->conns[$database]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $this->conns[$database] = new \PDO($dsn, $user, $password);
+      $this->conns[$database]->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     return $this->conns[$database];
