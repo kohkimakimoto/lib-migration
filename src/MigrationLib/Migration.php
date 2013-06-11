@@ -64,27 +64,37 @@ class Migration
 
     } elseif ($this->command == 'config') {
 
-        $this->listConfig();
-
-    } elseif ($this->command == 'status') {
-
-      $this->status();
+      $this->listConfig();
 
     } elseif ($this->command == 'create') {
 
-      $this->create();
+      if (count($arguments) > 0) {
+        $name = $arguments[0];
+      } else {
+        throw new Exception("You need to pass the argument for migration task name.");
+      }
+
+      $this->create($name);
+
+    } elseif ($this->command == 'status') {
+
+      // arguments are database names to be processed.
+      $this->status($arguments);
 
     } elseif ($this->command == 'migrate') {
 
-      $this->migrate();
+      // arguments are database names to be processed.
+      $this->migrate($arguments);
 
     } elseif ($this->command == 'up') {
 
-      $this->up();
+      // arguments are database names to be processed.
+      $this->up($arguments);
 
     } elseif ($this->command == 'down') {
 
-      $this->down();
+      // arguments are database names to be processed.
+      $this->down($arguments);
 
     } else {
       throw new Exception('Unknown command: '.$this->command);
@@ -146,48 +156,14 @@ class Migration
   }
 
   /**
-   * Run Status Command
-   */
-  public function status()
-  {
-    $databases = $this->getValidDatabases($this->arguments);
-    foreach ($databases as $database) {
-      $version = $this->getSchemaVersion($database);
-      if ($version !== null) {
-        $this->logger->write("[".$database."] Current schema version is ".$version);
-      }
-
-      $files = $this->getValidMigrationUpFileList($version);
-      if (count($files) === 0) {
-        $this->logger->write("[".$database."] Already up to date.");
-        continue;
-      }
-
-      $this->logger->write("[".$database."] Your migrations yet to be executed are below.");
-      $this->logger->write("");
-      foreach ($files as $file) {
-        $this->logger->write(basename($file));
-      }
-      $this->logger->write("");
-    }
-
-  }
-
-  /**
    * Run Create Command
    */
-  public function create()
+  public function create($taskName)
   {
-    if (count($this->arguments) > 0) {
-      $name = $this->arguments[0];
-    } else {
-      throw new Exception("You need to pass the argument for migration name. (ex php ".basename(__FILE__)." create foo");
-    }
-
     $timestamp = new \DateTime();
-    $filename = $timestamp->format('YmdHis')."_".$name.".php";
+    $filename = $timestamp->format('YmdHis')."_".$taskName.".php";
     $filepath = __DIR__."/".$filename;
-    $camelize_name = Utils::camelize($name);
+    $camelize_name = Utils::camelize($taskName);
 
     $content = <<<EOF
 <?php
@@ -245,11 +221,54 @@ EOF;
   }
 
   /**
-   * Run Migrate Command
+   * Run Status Command
+   * @param array $databases
    */
-  public function migrate()
+  public function status($databases = array())
   {
-    $databases = $this->getValidDatabases($this->arguments);
+    if (!$databases) {
+      // At default, processing all defined databases.
+      $databases = $this->getDatabaseNames();
+    }
+
+    // Validate database names.
+    $this->validateDatabaseNames($databases);
+
+    foreach ($databases as $database) {
+      $version = $this->getSchemaVersion($database);
+      if ($version !== null) {
+        $this->logger->write("[".$database."] Current schema version is ".$version);
+      }
+
+      $files = $this->getValidMigrationUpFileList($version);
+      if (count($files) === 0) {
+        $this->logger->write("[".$database."] Already up to date.");
+        continue;
+      }
+
+      $this->logger->write("[".$database."] Your migrations yet to be executed are below.");
+      $this->logger->write("");
+      foreach ($files as $file) {
+        $this->logger->write(basename($file));
+      }
+      $this->logger->write("");
+    }
+  }
+
+  /**
+   * Run Migrate Command
+   * @param unknown $databases
+   */
+  public function migrate($databases = array())
+  {
+    if (!$databases) {
+      // At default, processing all defined databases.
+      $databases = $this->getDatabaseNames();
+    }
+
+    // Validate database names.
+    $this->validateDatabaseNames($databases);
+
     foreach ($databases as $database) {
       $version = $this->getSchemaVersion($database);
 
@@ -271,10 +290,18 @@ EOF;
 
   /**
    * Run Up Command
+   * @param unknown $databases
    */
-  public function up()
+  public function up($databases = array())
   {
-    $databases = $this->getValidDatabases($this->arguments);
+    if (!$databases) {
+      // At default, processing all defined databases.
+      $databases = $this->getDatabaseNames();
+    }
+
+    // Validate database names.
+    $this->validateDatabaseNames($databases);
+
     foreach ($databases as $database) {
       $version = $this->getSchemaVersion($database);
 
@@ -294,10 +321,18 @@ EOF;
 
   /**
    * Run Down Command
+   * @param unknown $databases
    */
-  public function down()
+  public function down($databases = array())
   {
-    $databases = $this->getValidDatabases($this->arguments);
+    if (!$databases) {
+      // At default, processing all defined databases.
+      $databases = $this->getDatabaseNames();
+    }
+
+    // Validate database names.
+    $this->validateDatabaseNames($databases);
+
     foreach ($databases as $database) {
       $version = $this->getSchemaVersion($database);
 
@@ -322,6 +357,10 @@ EOF;
 
   }
 
+  /**
+   * Init task creates skelton configuration file.
+   * @throws Exception
+   */
   public function init()
   {
     $cwd = getcwd();
@@ -523,16 +562,19 @@ EOF;
     }
   }
 
-  protected function getValidDatabases($databases)
+  /**
+   * Validate defined database names.
+   * @param unknown $databases
+   * @throws Exception
+   */
+  protected function validateDatabaseNames($databases)
   {
-    $valid_databases = array();
-    if (!$databases) {
-      $valid_databases = $this->getDatabaseNames();
-    } else {
-      $this->validateDatabaseNames($databases);
-      $valid_databases = $this->arguments;
+    $definedDatabaseNames = $this->getDatabaseNames();
+    foreach ($databases as $dbname) {
+      if (array_search($dbname, $definedDatabaseNames) === false) {
+        throw new Exception("Database '".$dbname."' is not defined.");
+      }
     }
-    return $valid_databases;
   }
 
   protected function getDatabaseNames()
@@ -543,16 +585,6 @@ EOF;
     }
 
     return array_keys($database);
-  }
-
-  protected function validateDatabaseNames($databases)
-  {
-    $definedDatabaseNames = $this->getDatabaseNames();
-    foreach ($databases as $dbname) {
-      if (array_search($dbname, $definedDatabaseNames) === false) {
-        throw new Exception("Database '".$dbname."' is not defined.");
-      }
-    }
   }
 
   protected function getSchemaVersion($database)
