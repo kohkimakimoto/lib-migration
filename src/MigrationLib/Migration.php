@@ -593,12 +593,18 @@ EOF;
   protected function getConnection($database)
   {
     if (!@$this->conns[$database]) {
-      $dsn      = $this->config->get('databases/'.$database.'/database_dsn');
-      $user     = $this->config->get('databases/'.$database.'/database_user');
-      $password = $this->config->get('databases/'.$database.'/database_password');
 
-      $this->conns[$database] = new \PDO($dsn, $user, $password);
-      $this->conns[$database]->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+      if ($this->config->get('databases/'.$database.'/database_pdo')) {
+        $this->conns[$database] = $this->config->get('databases/'.$database.'/database_pdo');
+        $this->conns[$database]->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+      } else {
+        $dsn      = $this->config->get('databases/'.$database.'/database_dsn');
+        $user     = $this->config->get('databases/'.$database.'/database_user');
+        $password = $this->config->get('databases/'.$database.'/database_password');
+
+        $this->conns[$database] = new \PDO($dsn, $user, $password);
+        $this->conns[$database]->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+      }
     }
 
     return $this->conns[$database];
