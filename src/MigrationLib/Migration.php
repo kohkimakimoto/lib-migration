@@ -36,10 +36,9 @@ class Migration
   {
     $config_file = $this->config->get('config_file');
     if ($config_file) {
-      if (!file_exists($config_file)) {
-        throw  new Exception("$config_file is not found.");
+      if (file_exists($config_file)) {
+        $this->config->merge(array_merge(include $config_file, $this->config->getAll()));
       }
-      $this->config->merge(array_merge(include $config_file, $this->config->getAll()));
     }
   }
 
