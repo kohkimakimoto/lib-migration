@@ -56,7 +56,7 @@ class Cli
       $command = 'config';
     }
 
-    $config_file = 'migrate.php';
+    $config_file = 'migration.php';
     if (isset($options['f'])) {
       $config_file = $options['f'];
     }

@@ -14,7 +14,7 @@ namespace MigrationLib;
 class Migration
 {
   const VERSION = '1.0.0';
-  const DEFAULT_CONFIG_FILE = 'migrate.php';
+  const DEFAULT_CONFIG_FILE = 'migration.php';
 
   protected $config;
   protected $arguments;
@@ -107,7 +107,7 @@ class Migration
     $this->logger->write("Options:");
     $this->logger->write("  -d         : Switch the debug mode to output log on the debug level.");
     $this->logger->write("  -h         : List available command line options (this page).");
-    $this->logger->write("  -f=FILE    : Specify to load configuration file (default migrate.php).");
+    $this->logger->write("  -f=FILE    : Specify to load configuration file.");
     $this->logger->write("  -c         : List configurations.");
     $this->logger->write("");
     $this->logger->write("Commands:");
