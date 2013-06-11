@@ -750,7 +750,7 @@ EOF;
     }
 
     foreach ($gfiles as $file) {
-      if (preg_match("/^\d+_.+\.php$/", $file)) {
+      if (preg_match("/^\d+_.+\.php$/", basename($file))) {
 
         preg_match("/(\d+)_(.*)\.php$/", basename($file), $matches);
         $version    = $matches[1];
