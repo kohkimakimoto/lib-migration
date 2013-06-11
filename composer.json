@@ -1,6 +1,6 @@
 {
   "name": "kohkimakimoto/migration-lib",
-  "description": "This is a minimum database migration tool library for MySQL.",
+  "description": "MigrationLib is a minimum database migration library and command line tool for MySQL.",
   "keywords": ["migrations", "db", "database", "mysql"],
   "homepage": "https://github.com/kohkimakimoto/migration-lib",
   "license": "Apache License 2.0",
