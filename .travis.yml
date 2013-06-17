@@ -1,5 +1,5 @@
 before_script:
-  - composer install
+  - composer install --dev
   - sh ./tests/prepare_tests.sh
 
 language: php
