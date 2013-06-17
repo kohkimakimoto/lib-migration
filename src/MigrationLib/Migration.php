@@ -429,35 +429,29 @@ END;
     if ($this->isCliExecution($database)) {
       // cli
       $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
+      $pk = $this->config->get('databases/'.$database.'/schema_version_table_pk_column', null);
+      $pkvalue = $this->config->get('databases/'.$database.'/schema_version_table_pk_value', null);
+
       $sql = "show tables like '".$table."'";
 
       $arr = $this->execUsingCli($sql, $database);
 
       // Create table if it dosen't exist.
       if (count($arr) == 0) {
-        $sql =<<<EOF
-
-CREATE TABLE `$table` (
-  `version` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`version`) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_bin;
-
-EOF;
+        $sql = $this->getSchemaVersionTebleCreateSQL($table, $pk);
         $this->execUsingCli($sql, $database);
       }
 
       // Insert initial record if it dosen't exist.
-      $sql = "select * from ".$table;
+      $sql = $this->getSchemaVersionTebleSelectSQL($table, $pk ,$pkvalue);
       $arr = $this->execUsingCli($sql, $database);
       if (count($arr) == 0) {
-        $sql = "insert into ".$table."(version) values ('$version')";
+        $sql = $this->getSchemaVersionTebleInsertSQL($version, $table, $pk ,$pkvalue);
         $this->execUsingCli($sql, $database);
       }
 
       // Update version.
-      $sql = "update ".$table." set version = '$version'";
+      $sql = $this->getSchemaVersionTebleUpdateSQL($version, $table, $pk ,$pkvalue);
       $this->execUsingCli($sql, $database);
 
     } else {
@@ -465,6 +459,9 @@ EOF;
       $conn = $this->getConnection($database);
 
       $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
+      $pk = $this->config->get('databases/'.$database.'/schema_version_table_pk_column', null);
+      $pkvalue = $this->config->get('databases/'.$database.'/schema_version_table_pk_value', null);
+
       $sql = "show tables like '".$table."'";
       $stmt = $conn->prepare($sql);
       $stmt->execute();
@@ -473,35 +470,26 @@ EOF;
 
       // Create table if it dosen't exist.
       if (count($arr) == 0) {
-        $sql =<<<EOF
-
-CREATE TABLE `$table` (
-  `version` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`version`) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_bin;
-
-EOF;
+        $sql = $this->getSchemaVersionTebleCreateSQL($table, $pk);
         $stmt = $conn->prepare($sql);
         $stmt ->execute();
       }
 
       // Insert initial record if it dosen't exist.
-      $sql = "select * from ".$table;
+      $sql = $this->getSchemaVersionTebleSelectSQL($table, $pk ,$pkvalue);
       $stmt = $conn->prepare($sql);
       $stmt->execute();
       $arr = $stmt->fetchAll();
       if (count($arr) == 0) {
-        $sql = "insert into ".$table."(version) values (:version)";
+        $sql = $this->getSchemaVersionTebleInsertSQL($version, $table, $pk ,$pkvalue);
         $stmt = $conn->prepare($sql);
-        $stmt->execute(array(':version' => $version));
+        $stmt->execute();
       }
 
       // Update version.
-      $sql = "update ".$table." set version = :version";
+      $sql = $this->getSchemaVersionTebleUpdateSQL($version, $table, $pk ,$pkvalue);
       $stmt = $conn->prepare($sql);
-      $stmt->execute(array(':version' => $version));
+      $stmt->execute();
     }
   }
 
@@ -536,6 +524,9 @@ EOF;
     if ($this->isCliExecution($database)) {
       // cli
       $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
+      $pk = $this->config->get('databases/'.$database.'/schema_version_table_pk_column', null);
+      $pkvalue = $this->config->get('databases/'.$database.'/schema_version_table_pk_value', null);
+
       $sql = "show tables like '".$table."'";
 
       $arr = $this->execUsingCli($sql, $database);
@@ -546,7 +537,7 @@ EOF;
         return null;
       }
 
-      $sql = "select version from ".$table."";
+      $sql = $this->getSchemaVersionTebleSelectSQL($table, $pk ,$pkvalue);
       $arr = $this->execUsingCli($sql, $database);
       if (count($arr) > 0) {
         return $arr[0];
@@ -560,6 +551,8 @@ EOF;
       $conn = $this->getConnection($database);
 
       $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
+      $pk = $this->config->get('databases/'.$database.'/schema_version_table_pk_column', null);
+
       $sql = "show tables like '".$table."'";
       $stmt = $conn->prepare($sql);
       $stmt->execute();
@@ -572,7 +565,7 @@ EOF;
         return null;
       }
 
-      $sql = "select version from ".$table."";
+      $sql = $this->getSchemaVersionTebleSelectSQL($table, $pk ,$pkvalue);
       $stmt = $conn->prepare($sql);
       $stmt->execute();
 
@@ -771,6 +764,74 @@ EOF;
     return $files;
   }
 
+  protected function getSchemaVersionTebleCreateSQL($table, $pk = null)
+  {
+    $sql= null;
+    if ($pk) {
+      $sql =<<<EOF
+
+CREATE TABLE `$table` (
+  `$pk` VARCHAR(255) NOT NULL,
+  `version` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`$pk`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+EOF;
+
+    } else {
+      $sql =<<<EOF
+
+CREATE TABLE `$table` (
+  `version` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`version`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+EOF;
+
+    }
+
+    return $sql;
+  }
+
+  protected function getSchemaVersionTebleSelectSQL($table, $pk = null, $pkvalue = null)
+  {
+    $sql = null;
+    if ($pk && $pkvalue) {
+      $sql = "select version from ".$table." where $pk = '".$pkvalue."'";
+    } else {
+      $sql = "select version from ".$table."";
+    }
+
+    return $sql;
+  }
+
+  protected function getSchemaVersionTebleInsertSQL($version, $table, $pk = null, $pkvalue = null)
+  {
+    $sql = null;
+    if ($pk && $pkvalue) {
+      $sql = "insert into ".$table."($pk, version) values ('$pkvalue', '$version')";
+    } else {
+      $sql = "insert into ".$table."(version) values ('$version')";
+    }
+
+    return $sql;
+  }
+
+  protected function getSchemaVersionTebleUpdateSQL($version, $table, $pk = null, $pkvalue = null)
+  {
+    $sql = null;
+    if ($pk && $pkvalue) {
+      $sql = "update ".$table." set version = '$version' where $pk = '$pkvalue'";
+    } else {
+      $sql = "update ".$table." set version = '$version'";
+    }
+
+    return $sql;
+  }
 }
 
 

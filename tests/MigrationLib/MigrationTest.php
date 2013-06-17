@@ -76,6 +76,7 @@ EOF;
     $migration->status();
   }
 
+  /*
   public function testStatus3()
   {
     $expect = <<<EOF
@@ -99,23 +100,21 @@ EOF;
     $migration->status();
 
   }
+  */
 
   public function testUp()
   {
-    $expect = <<<EOF
-[migration_lib_test] Already up to date.
-
-EOF;
-
-    $this->expectOutputString($expect);
-
     $migration = new Migration(array(
-        'databases' => array(
-            'migration_lib_test' => array(
-                'database_pdo' => new \PDO('mysql:dbname=migration_lib_test;host=127.0.0.1', 'test_user', 'test_user'),
-            ),
+      'databases' => array(
+        'migration_lib_test' => array(
+          'database_pdo' => new \PDO('mysql:dbname=migration_lib_test;host=127.0.0.1', 'test_user', 'test_user'),
+          'schema_version_table_pk_column' => 'id',
+          'schema_version_table_pk_value'  => 'test',
         ),
+      ),
+      'migration_dir' => __DIR__."/../data/migration01",
     ));
+
     $migration->up();
   }
 
