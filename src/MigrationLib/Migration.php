@@ -552,6 +552,7 @@ END;
 
       $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
       $pk = $this->config->get('databases/'.$database.'/schema_version_table_pk_column', null);
+      $pkvalue = $this->config->get('databases/'.$database.'/schema_version_table_pk_value', null);
 
       $sql = "show tables like '".$table."'";
       $stmt = $conn->prepare($sql);
