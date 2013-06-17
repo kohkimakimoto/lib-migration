@@ -12,9 +12,9 @@ class MigrationTest extends \PHPUnit_Framework_TestCase
     $migration = new Migration(array(
       'databases' => array(
         'yourdatabase' => array(
-          'database_dsn'      => 'mysql:dbname=myapp_test;host=127.0.0.1',
-          'database_user'     => 'root',
-          'database_password' => '',
+          'database_dsn'      => 'mysql:dbname=migration_lib_test;host=127.0.0.1',
+          'database_user'     => 'test_user',
+          'database_password' => 'test_user',
           'schema_version_table' => 'schema_version'
         ),
       ),
@@ -26,7 +26,7 @@ class MigrationTest extends \PHPUnit_Framework_TestCase
     $migration = new Migration(array(
         'databases' => array(
             'yourdatabase' => array(
-                'database_pdo' => new \PDO('mysql:dbname=myapp_test;host=127.0.0.1', 'root', ''),
+                'database_pdo' => new \PDO('mysql:dbname=migration_lib_test;host=127.0.0.1', 'test_user', 'test_user'),
             ),
         ),
     ));
