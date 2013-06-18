@@ -150,7 +150,7 @@ OK. You are ready to execute migrate command. Run the following command.
 
     php bin/phpmigrate migrate
 
-This commad drop your sample table.
+This commad will creat your sample table.
 
 #### Command line Options
 
