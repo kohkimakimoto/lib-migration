@@ -1,8 +1,8 @@
-# MigrationLib
+# LibMigration
 
 [![Build Status](https://travis-ci.org/kohkimakimoto/migration-lib.png?branch=master)](https://travis-ci.org/kohkimakimoto/migration-lib)
 
-MigrationLib is a minimum database migration library and command line tool for MySQL.
+LibMigration is a minimum database migration library and command line tool for MySQL.
 
 It's PHP program restructured from [PHPMigrate](https://github.com/kohkimakimoto/phpmigrate) to use easily in other PHP products.
 
@@ -34,7 +34,7 @@ And run Composer install command.
 
 ### phpmigrate
 
-MigrationLib bundles simple command line interface `phpmigrate`.
+LibMigration bundles simple command line interface `phpmigrate`.
 You can use it to manage your database schema migrations.
 
 #### Configurations
@@ -201,9 +201,9 @@ This commad will creat your sample table.
 
 ### Using as library
 
-You easily use MigrationLib in your products. The followin Migration code.
+You easily use LibMigration in your products. The followin Migration code.
 
-    $migration = new \MigrationLib\Migration(array(
+    $migration = new \LibMigration\Migration(array(
       'databases' => array(
         'yourdatabase' => array(
           'database_pdo'         => $connection,  // PDO Connecition instance.

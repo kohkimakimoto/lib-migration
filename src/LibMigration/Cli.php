@@ -1,10 +1,10 @@
 <?php
 /**
- * MigrationLib
+ * LibMigration
  *
- * @package    MigrationLib
+ * @package    LibMigration
  */
-namespace MigrationLib;
+namespace LibMigration;
 
 /**
  * Command line interface Class

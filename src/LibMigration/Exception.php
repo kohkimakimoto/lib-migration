@@ -1,5 +1,5 @@
 <?php
-namespace MigrationLib;
+namespace LibMigration;
 
 class Exception extends \Exception
 {
