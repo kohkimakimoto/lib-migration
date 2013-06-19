@@ -1,7 +1,7 @@
 <?php
-namespace Test\MigrationLib;
+namespace Test\LibMigration;
 
-use MigrationLib\Utils;
+use LibMigration\Utils;
 
 class UtilsTest extends \PHPUnit_Framework_TestCase
 {
