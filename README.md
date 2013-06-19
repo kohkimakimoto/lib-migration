@@ -1,6 +1,6 @@
 # LibMigration
 
-[![Build Status](https://travis-ci.org/kohkimakimoto/migration-lib.png?branch=master)](https://travis-ci.org/kohkimakimoto/migration-lib)
+[![Build Status](https://travis-ci.org/kohkimakimoto/lib-migration.png?branch=master)](https://travis-ci.org/kohkimakimoto/lib-migration)
 
 LibMigration is a minimum database migration library and command line tool for MySQL.
 
