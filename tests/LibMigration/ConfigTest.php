@@ -1,7 +1,7 @@
 <?php
-namespace Test\MigrationLib;
+namespace Test\LibMigration;
 
-use MigrationLib\Config;
+use LibMigration\Config;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {

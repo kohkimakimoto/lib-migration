@@ -1,7 +1,7 @@
 <?php
-namespace Test\MigrationLib;
+namespace Test\LibMigration;
 
-use MigrationLib\Logger;
+use LibMigration\Logger;
 
 class LoggerTest extends \PHPUnit_Framework_TestCase
 {

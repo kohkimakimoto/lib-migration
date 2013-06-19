@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true" bootstrap="tests/bootstrap.php">
   <testsuites>
-    <testsuite name="MigrationLib Test Suite">
+    <testsuite name="LibMigration Test Suite">
       <directory suffix="Test.php">tests</directory>
     </testsuite>
   </testsuites>
