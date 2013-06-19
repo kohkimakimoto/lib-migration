@@ -32,7 +32,7 @@ And run Composer install command.
 
 ## Usage
 
-### phpmigrate 
+### phpmigrate
 
 MigrationLib bundles simple command line interface `phpmigrate`.
 You can use it to manage your database schema migrations.
@@ -53,7 +53,7 @@ You will get `migration.php` file. Open and edit it to your environment like the
           'database_dsn'      => 'mysql:dbname=yourdatabase;host=localhost',
           'database_user'     => 'user',
           'database_password' => 'password',
-    
+
           // schema version table
           'schema_version_table' => 'schema_version'
         ),
@@ -63,7 +63,7 @@ You will get `migration.php` file. Open and edit it to your environment like the
       ),
     );
 
-or 
+or
 
     <?php
     return array(
@@ -78,7 +78,7 @@ or
           'mysql_command_password'  => "password",
           'mysql_command_database'  => "yourdatabase",
           'mysql_command_options'   => "--default-character-set=utf8",
-    
+
           // schema version table
           'schema_version_table' => 'schema_version'
         ),
@@ -88,7 +88,7 @@ or
       ),
     );
 
-Under the array key `databases`, your database settings is written. 
+Under the array key `databases`, your database settings is written.
 You can write multiple database settings to manage same schema at multi databases.
 
 Difference between settings of `database_xxx` and `mysql_command_xxx` is database connection to execute migration SQL.
@@ -199,7 +199,7 @@ This commad drop your sample table.
 
         php bin/phpmigrate down
 
-### Using library 
+### Using as library
 
 You easily use MigrationLib in your products. The followin Migration code.
 
@@ -211,7 +211,7 @@ You easily use MigrationLib in your products. The followin Migration code.
         )),
       'migration_dir' => "path/to/migration/directory"
     ));
-    
+
     $migration->migrate();
     // or other tasks.
     // $migration->status();
