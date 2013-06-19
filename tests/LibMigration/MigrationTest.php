@@ -107,7 +107,7 @@ EOF;
     $migration = new Migration(array(
       'databases' => array(
         'migration_lib_test' => array(
-          'database_pdo' => new \PDO('mysql:dbname=migration_lib_test;host=127.0.0.1', 'test_user', 'test_user'),
+          'database_pdo' => new \PDO('mysql:dbname=lib_migration_test;host=127.0.0.1', 'test_user', 'test_user'),
           'schema_version_table_pk_column' => 'id',
           'schema_version_table_pk_value'  => 'test',
         ),
