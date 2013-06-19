@@ -21,7 +21,7 @@ Use composer installation. Make `composer.json` like the following.
 
     {
       "require": {
-        "kohkimakimoto/migration-lib": "dev-master"
+        "kohkimakimoto/lib-migration": "dev-master"
       }
     }
 
