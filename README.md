@@ -201,7 +201,7 @@ This commad will creat your sample table.
 
 ### Using as library
 
-You easily use LibMigration in your products. The followin Migration code.
+You can easily use LibMigration in your products. See the following code to migrate.
 
     $migration = new \LibMigration\Migration(array(
       'databases' => array(
@@ -217,9 +217,6 @@ You easily use LibMigration in your products. The followin Migration code.
     // $migration->status();
     // $migration->up();
     // $migration->down();
-
-
-
 
 
 
