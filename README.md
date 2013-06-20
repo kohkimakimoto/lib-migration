@@ -19,11 +19,13 @@ It's PHP program restructured from [PHPMigrate](https://github.com/kohkimakimoto
 
 Use composer installation. Make `composer.json` like the following.
 
-    {
-      "require": {
-        "kohkimakimoto/lib-migration": "dev-master"
-      }
-    }
+``` json
+{
+  "require": {
+    "kohkimakimoto/lib-migration": "dev-master"
+  }
+}
+```
 
 And run Composer install command.
 
@@ -45,48 +47,52 @@ Run the below command to create first configuration file.
 
 You will get `migration.php` file. Open and edit it to your environment like the following.
 
-    <?php
-    return array(
-      'databases' => array(
-        'yourdatabase' => array(
-          // PDO Connection settings.
-          'database_dsn'      => 'mysql:dbname=yourdatabase;host=localhost',
-          'database_user'     => 'user',
-          'database_password' => 'password',
+``` php
+<?php
+return array(
+  'databases' => array(
+    'yourdatabase' => array(
+      // PDO Connection settings.
+      'database_dsn'      => 'mysql:dbname=yourdatabase;host=localhost',
+      'database_user'     => 'user',
+      'database_password' => 'password',
 
-          // schema version table
-          'schema_version_table' => 'schema_version'
-        ),
-        'yourdatabase2' => array(
-           // Second database setting...
-        ),
-      ),
-    );
+      // schema version table
+      'schema_version_table' => 'schema_version'
+    ),
+    'yourdatabase2' => array(
+       // Second database setting...
+    ),
+  ),
+);
+```
 
 or
 
-    <?php
-    return array(
-      'databases' => array(
-        'yourdatabase' => array(
-          // mysql client command settings.
-          'mysql_command_enable'    => true,
-          'mysql_command_cli'       => "/usr/bin/mysql",
-          'mysql_command_tmpsqldir' => "/tmp",
-          'mysql_command_host'      => "localhost",
-          'mysql_command_user'      => "user",
-          'mysql_command_password'  => "password",
-          'mysql_command_database'  => "yourdatabase",
-          'mysql_command_options'   => "--default-character-set=utf8",
+``` php
+<?php
+return array(
+  'databases' => array(
+    'yourdatabase' => array(
+      // mysql client command settings.
+      'mysql_command_enable'    => true,
+      'mysql_command_cli'       => "/usr/bin/mysql",
+      'mysql_command_tmpsqldir' => "/tmp",
+      'mysql_command_host'      => "localhost",
+      'mysql_command_user'      => "user",
+      'mysql_command_password'  => "password",
+      'mysql_command_database'  => "yourdatabase",
+      'mysql_command_options'   => "--default-character-set=utf8",
 
-          // schema version table
-          'schema_version_table' => 'schema_version'
-        ),
-        'yourdatabase2' => array(
-           // Second database setting...
-        ),
-      ),
-    );
+      // schema version table
+      'schema_version_table' => 'schema_version'
+    ),
+    'yourdatabase2' => array(
+       // Second database setting...
+    ),
+  ),
+);
+```
 
 Under the array key `databases`, your database settings is written.
 You can write multiple database settings to manage same schema at multi databases.
@@ -112,39 +118,40 @@ You will get the following messages and the skeleton migration file.
 Open the `20130617213426_create_sample_table.php`. And modify `getUpSQL` and `getDownSQL` method like below.
 
 
+``` php
+  /**
+   * Return the SQL statements for the Up migration
+   *
+   * @return string The SQL string to execute for the Up migration.
+   */
+  public function getUpSQL()
+  {
+     return <<<END
 
-      /**
-       * Return the SQL statements for the Up migration
-       *
-       * @return string The SQL string to execute for the Up migration.
-       */
-      public function getUpSQL()
-      {
-         return <<<END
+CREATE TABLE `sample` (
+  `id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
 
-    CREATE TABLE `sample` (
-      `id` INT UNSIGNED NOT NULL,
-      PRIMARY KEY (`id`) )
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8
-    COLLATE = utf8_bin;
+END;
+  }
 
-    END;
-      }
+/**
+ * Return the SQL statements for the Down migration
+ *
+ * @return string The SQL string to execute for the Down migration.
+ */
+public function getDownSQL()
+{
+    return <<<END
 
-    /**
-     * Return the SQL statements for the Down migration
-     *
-     * @return string The SQL string to execute for the Down migration.
-     */
-    public function getDownSQL()
-    {
-        return <<<END
+   DROP TABLE `sample`;
 
-       DROP TABLE `sample`;
-
-    END;
-    }
+END;
+}
+```
 
 OK. You are ready to execute migrate command. Run the following command.
 
@@ -203,22 +210,22 @@ This commad will creat your sample table.
 
 You can easily use LibMigration in your products. See the following code to migrate.
 
-    $migration = new \LibMigration\Migration(array(
-      'databases' => array(
-        'yourdatabase' => array(
-          'database_pdo'         => $connection,  // PDO Connecition instance.
-          'schema_version_table' => 'schema_version',
-        )),
-      'migration_dir' => "path/to/migration/directory"
-    ));
+``` php
+$migration = new \LibMigration\Migration(array(
+  'databases' => array(
+    'yourdatabase' => array(
+      'database_pdo'         => $connection,  // PDO Connecition instance.
+      'schema_version_table' => 'schema_version',
+    )),
+  'migration_dir' => "path/to/migration/directory"
+));
 
-    $migration->migrate();
-    // or other tasks.
-    // $migration->status();
-    // $migration->up();
-    // $migration->down();
-
-
+$migration->migrate();
+// or other tasks.
+// $migration->status();
+// $migration->up();
+// $migration->down();
+```
 
 ## License
 
