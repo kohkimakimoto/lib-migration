@@ -1,0 +1,6 @@
+{
+  "require": {
+    "kohkimakimoto/lib-migration": "dev-master"
+  }
+}
+
