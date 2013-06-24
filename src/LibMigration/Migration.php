@@ -183,7 +183,7 @@ EOF;
         $this->logger->write("[".$database."] Current schema version is ".$version);
       }
 
-      $files = $this->getValidMigrationUpFileList($version);
+      $files = $this->getValidMigrationUpFileList($database, $version);
       if (count($files) === 0) {
         $this->logger->write("[".$database."] Already up to date.");
         continue;
@@ -219,7 +219,7 @@ EOF;
         $this->logger->write("[".$database."] Current schema version is ".$version);
       }
 
-      $files = $this->getValidMigrationUpFileList($version);
+      $files = $this->getValidMigrationUpFileList($database, $version);
       if (count($files) === 0) {
         $this->logger->write("[".$database."] Already up to date.");
         continue;
@@ -252,7 +252,7 @@ EOF;
         $this->logger->write("[".$database."] Current schema version is ".$version);
       }
 
-      $files = $this->getValidMigrationUpFileList($version);
+      $files = $this->getValidMigrationUpFileList($database, $version);
       if (count($files) === 0) {
         $this->logger->write("[".$database."] Already up to date.");
         continue;
@@ -283,7 +283,7 @@ EOF;
         $this->logger->write("[".$database."] Current schema version is ".$version);
       }
 
-      $files = $this->getValidMigrationDownFileList($version);
+      $files = $this->getValidMigrationDownFileList($database, $version);
       if (count($files) === 0) {
         $this->logger->write("[".$database."] Not found older migration files than current schema version.");
         continue;
@@ -508,6 +508,10 @@ END;
     }
   }
 
+  /**
+   * Get defined database names
+   * @throws Exception
+   */
   protected function getDatabaseNames()
   {
     $database = $this->config->get('databases');
@@ -694,11 +698,11 @@ END;
 
 
 
-  protected function getValidMigrationUpFileList($version)
+  protected function getValidMigrationUpFileList($database, $version)
   {
     $valid_files = array();
 
-    $files = $this->getMigrationFileList();
+    $files = $this->getMigrationFileList($database);
     foreach ($files as $file) {
       preg_match ("/^\d+/", basename($file), $matches);
       $timestamp = $matches[0];
@@ -711,11 +715,11 @@ END;
     return $valid_files;
   }
 
-  protected function getValidMigrationDownFileList($version)
+  protected function getValidMigrationDownFileList($database, $version)
   {
     $valid_files = array();
 
-    $files = $this->getMigrationFileList();
+    $files = $this->getMigrationFileList($database);
     rsort($files);
     foreach ($files as $file) {
       preg_match ("/^\d+/", basename($file), $matches);
@@ -729,9 +733,9 @@ END;
     return $valid_files;
   }
 
-  protected function getMigrationFileList()
+  protected function getMigrationFileList($database)
   {
-    $migration_dir = $this->config->get('migration_dir');
+    $migration_dir = $this->config->get('databases/'.$database.'/migration_dir');
 
     $files = array();
     $classes = array();
