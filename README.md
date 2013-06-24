@@ -2,13 +2,13 @@
 
 [![Build Status](https://travis-ci.org/kohkimakimoto/lib-migration.png?branch=master)](https://travis-ci.org/kohkimakimoto/lib-migration)
 
-LibMigration is a minimum database migration library and command line tool for MySQL.
+LibMigration is a minimum database migration library and framework for MySQL.
 
 It's PHP program restructured from [PHPMigrate](https://github.com/kohkimakimoto/phpmigrate) to use easily in other PHP products.
 
 ## Features
 
-  * Migrations use plain SQL to change schema.
+  * Migrations use plain SQL to change schema. Don't use abstract syntax.
   * You can run some PHP codes post and previous executing SQL.
 
 ## Requrement
