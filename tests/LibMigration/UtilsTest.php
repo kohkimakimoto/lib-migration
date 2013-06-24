@@ -24,7 +24,10 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals(18, Utils::arrayKeyLargestLength($tArray));
   }
 
-
+  public function testCamelize()
+  {
+    $this->assertEquals('AaaEeeBbb', Utils::camelize("aaa_eee_bbb"));
+  }
 
 
 }
