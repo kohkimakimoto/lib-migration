@@ -69,7 +69,7 @@ EOF;
           'mysql_command_options'   => "--default-character-set=utf8",
 
           // schema version table
-          'schema_version_table' => 'schema_version'
+          'schema_version_table'    => 'schema_version'
         ),
       ),
     ));
