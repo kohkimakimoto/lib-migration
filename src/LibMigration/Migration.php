@@ -48,7 +48,7 @@ class Migration
    */
   public function helpForCli()
   {
-    $this->logger->write("LibMigration is a minimum migration library and command line tool for MySQL. version ".self::VERSION);
+    $this->logger->write("LibMigration is a minimum database migration library and framework for MySQL. version ".self::VERSION);
     $this->logger->write("");
     $this->logger->write("Copyright (c) Kohki Makimoto <kohki.makimoto@gmail.com>");
     $this->logger->write("Apache License 2.0");
