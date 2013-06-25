@@ -58,7 +58,10 @@ return array(
       'database_password' => 'password',
 
       // schema version table
-      'schema_version_table' => 'schema_version'
+      'schema_version_table'    => 'schema_version',
+      ,
+      // directory contains migration task files.
+      'migration_dir'           => '.'
     ),
     'yourdatabase2' => array(
        // Second database setting...
@@ -85,7 +88,10 @@ return array(
       'mysql_command_options'   => "--default-character-set=utf8",
 
       // schema version table
-      'schema_version_table' => 'schema_version'
+      'schema_version_table'    => 'schema_version',
+
+      // directory contains migration task files.
+      'migration_dir'           => '.'
     ),
     'yourdatabase2' => array(
        // Second database setting...
@@ -176,7 +182,7 @@ This commad will creat your sample table.
 
 #### Commands
 
-  * **create**
+  * **create NAME [DATABASENAME ...]**
 
     Create new skeleton migration file.
 
