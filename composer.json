@@ -1,6 +1,6 @@
 {
   "name": "kohkimakimoto/lib-migration",
-  "description": "LibMigration is a minimum database migration library and command line tool for MySQL.",
+  "description": "LibMigration is a minimum database migration library and framework for MySQL.",
   "keywords": ["migrations", "db", "database", "mysql"],
   "homepage": "https://github.com/kohkimakimoto/lib-migration",
   "license": "Apache License 2.0",
