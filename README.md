@@ -222,8 +222,8 @@ $migration = new \LibMigration\Migration(array(
     'yourdatabase' => array(
       'database_pdo'         => $connection,  // PDO Connecition instance.
       'schema_version_table' => 'schema_version',
+      'migration_dir' => "path/to/migration/directory"
     )),
-  'migration_dir' => "path/to/migration/directory"
 ));
 
 $migration->migrate();
