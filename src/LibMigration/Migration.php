@@ -63,12 +63,12 @@ class Migration
     $this->logger->write("  -c         : List configurations.");
     $this->logger->write("");
     $this->logger->write("Commands:");
-    $this->logger->write("  create NAME                   : Create new skeleton migration task file.");
-    $this->logger->write("  status [DATABASENAME ...]     : List the migrations yet to be executed.");
-    $this->logger->write("  migrate [DATABASENAME ...]    : Execute the next migrations up.");
-    $this->logger->write("  up [DATABASENAME ...]         : Execute the next migration up.");
-    $this->logger->write("  down [DATABASENAME ...]       : Execute the next migration down.");
-    $this->logger->write("  init                          : Create skelton configuration file in the current working directory.");
+    $this->logger->write("  create NAME [DATABASENAME ...]    : Create new skeleton migration task file.");
+    $this->logger->write("  status [DATABASENAME ...]         : List the migrations yet to be executed.");
+    $this->logger->write("  migrate [DATABASENAME ...]        : Execute the next migrations up.");
+    $this->logger->write("  up [DATABASENAME ...]             : Execute the next migration up.");
+    $this->logger->write("  down [DATABASENAME ...]           : Execute the next migration down.");
+    $this->logger->write("  init                              : Create skelton configuration file in the current working directory.");
     $this->logger->write("");
   }
 
@@ -101,66 +101,20 @@ class Migration
   /**
    * Run Create Command
    */
-  public function create($taskName)
+  public function create($taskName, $databases)
   {
+    if (!$databases) {
+      // At default, processing all defined databases.
+      $databases = $this->getDatabaseNames();
+    }
+
+    // Validate database names.
+    $this->validateDatabaseNames($databases);
+
     $timestamp = new \DateTime();
-    $filename = $timestamp->format('YmdHis')."_".$taskName.".php";
-    $filepath = __DIR__."/".$filename;
-    $camelize_name = Utils::camelize($taskName);
-
-    $content = <<<EOF
-<?php
-/**
- * Migration Task class.
- */
-class $camelize_name
-{
-  public function preUp()
-  {
-      // add the pre-migration code here
-  }
-
-  public function postUp()
-  {
-      // add the post-migration code here
-  }
-
-  public function preDown()
-  {
-      // add the pre-migration code here
-  }
-
-  public function postDown()
-  {
-      // add the post-migration code here
-  }
-
-  /**
-   * Return the SQL statements for the Up migration
-   *
-   * @return string The SQL string to execute for the Up migration.
-   */
-  public function getUpSQL()
-  {
-     return "";
-  }
-
-  /**
-   * Return the SQL statements for the Down migration
-   *
-   * @return string The SQL string to execute for the Down migration.
-   */
-  public function getDownSQL()
-  {
-     return "";
-  }
-
-}
-EOF;
-
-    file_put_contents($filename, $content);
-
-    $this->logger->write("Created ".$filename);
+    foreach ($databases as $database) {
+      $this->createMigrationTask($taskName, $timestamp, $database);
+    }
   }
 
   /**
@@ -346,6 +300,75 @@ END;
 
     file_put_contents($configpath, $cotent);
     $this->logger->write("Create configuration file to $configpath");
+  }
+
+  protected function createMigrationTask($taskName, $timestamp, $database)
+  {
+    $migration_dir = $this->config->get('databases/'.$database.'/migration_dir');
+    if (!$migration_dir) {
+      $migration_dir = __DIR__;
+    }
+
+    $filename = $timestamp->format('YmdHis')."_".$taskName.".php";
+    $filepath = $migration_dir."/".$filename;
+    $camelize_name = Utils::camelize($taskName);
+
+    $content = <<<EOF
+<?php
+/**
+ * Migration Task class.
+ */
+class $camelize_name
+{
+  public function preUp()
+  {
+      // add the pre-migration code here
+  }
+
+  public function postUp()
+  {
+      // add the post-migration code here
+  }
+
+  public function preDown()
+  {
+      // add the pre-migration code here
+  }
+
+  public function postDown()
+  {
+      // add the post-migration code here
+  }
+
+  /**
+   * Return the SQL statements for the Up migration
+   *
+   * @return string The SQL string to execute for the Up migration.
+   */
+  public function getUpSQL()
+  {
+     return "";
+  }
+
+  /**
+   * Return the SQL statements for the Down migration
+   *
+   * @return string The SQL string to execute for the Down migration.
+   */
+  public function getDownSQL()
+  {
+     return "";
+  }
+
+}
+EOF;
+    if (!is_dir(dirname($filepath))) {
+      mkdir(dirname($filepath));
+    }
+
+    file_put_contents($filepath, $content);
+
+    $this->logger->write("[".$database."] Created ".$filepath);
   }
 
   protected function migrateUp($file, $database)

@@ -119,12 +119,12 @@ class Cli
     } elseif ($command == 'create') {
 
       if (count($arguments) > 0) {
-        $name = $arguments[0];
+        $name = array_shift($arguments);
       } else {
         throw new Exception("You need to pass the argument for migration task name.");
       }
 
-      $migration ->create($name);
+      $migration ->create($name, $arguments);
 
     } elseif ($command == 'status') {
 
