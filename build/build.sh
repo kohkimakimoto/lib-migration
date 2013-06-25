@@ -20,6 +20,7 @@ fi
 cp $DIR/skeleton/composer.json composer.json
 cp $DIR/skeleton/migration.php migration.php
 cp -pr $DIR/skeleton/databases databases
+cp -pr $DIR/skeleton/bin bin
 
 $PHP composer.phar install -q
 
