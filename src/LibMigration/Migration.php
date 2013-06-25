@@ -113,7 +113,7 @@ class Migration
 
     $timestamp = new \DateTime();
     foreach ($databases as $database) {
-      $this->createMigrationTask($taskName, $timestamp, $database);
+      $this->createMigrationTask($database."_".$taskName, $timestamp, $database);
     }
   }
 
@@ -309,7 +309,7 @@ END;
       $migration_dir = __DIR__;
     }
 
-    $filename = $timestamp->format('YmdHis')."_".$database."_".$taskName.".php";
+    $filename = $timestamp->format('YmdHis')."_".$taskName.".php";
     $filepath = $migration_dir."/".$filename;
     $camelize_name = Utils::camelize($taskName);
 
@@ -363,7 +363,7 @@ class $camelize_name
 }
 EOF;
     if (!is_dir(dirname($filepath))) {
-      mkdir(dirname($filepath), 755, true);
+      mkdir(dirname($filepath), 0777, true);
     }
 
     file_put_contents($filepath, $content);
