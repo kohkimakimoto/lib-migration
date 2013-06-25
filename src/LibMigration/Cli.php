@@ -19,17 +19,34 @@ class Cli
   public static function main()
   {
     list($command, $arguments, $config) = self::preProcess();
+    $migration = new Migration($config);
 
     try {
 
       $cli = new Cli();
-      $cli->execute($command, $arguments, $config);
+      $cli->execute($migration, $command, $arguments, $config);
 
     } catch (\Exception $e) {
-      if (isset($config['debug']) && $config['debug']) {
-        fputs(STDERR, $e);
+
+      $debug = $migration->getConfig()->get('debug');
+      $colors = $migration->getConfig()->get('colors');
+
+      if (isset($debug) && $debug) {
+
+        if ($colors) {
+          fputs(STDERR, pack('c',0x1B)."[1;37;41m".$e.pack('c',0x1B)."[0m\n");
+        } else {
+          fputs(STDERR, $e);
+        }
+
       } else {
-        fputs(STDERR, $e->getMessage()."\n");
+
+        if ($colors) {
+          fputs(STDERR, pack('c',0x1B)."[1;37;41m".$e->getMessage().pack('c',0x1B)."[0m\n");
+        } else {
+          fputs(STDERR, $e->getMessage()."\n");
+        }
+
       }
     }
   }
@@ -100,10 +117,8 @@ class Cli
    * @param unknown $task
    * @param unknown $options
    */
-  public function execute($command, $arguments, $config)
+  public function execute($migration, $command, $arguments, $config)
   {
-    $migration = new Migration($config);
-
     if ($command == 'help') {
 
       $migration ->helpForCli();

@@ -20,18 +20,31 @@ class Logger
     $this->config = $config;
   }
 
-  public function write($msg, $level = 'info')
+  public function write($msg, $prefix = null, $level = 'info')
   {
     if (!$this->config->get('log', true)) {
       return;
     }
 
+    if ($prefix) {
+      $prefix .= ' ';
+    }
+
+
     if ($level == 'debug') {
       if ($this->config->get('debug')) {
-        echo "DEBUG >> ".$msg."\n";
+        if ($this->config->get('colors')) {
+          echo pack('c',0x1B)."[0;34m"."DEBUG >> ".$msg.pack('c',0x1B)."[0m\n";
+        } else {
+          echo "DEBUG >> ".$msg."\n";
+        }
       }
     } else {
-      echo $msg."\n";
+      if ($this->config->get('colors')) {
+        echo pack('c',0x1B)."[0;32m".$prefix.pack('c',0x1B)."[0m".$msg."\n";
+      } else {
+        echo $prefix.$msg."\n";
+      }
     }
   }
 }

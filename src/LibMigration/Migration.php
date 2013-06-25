@@ -13,7 +13,7 @@ namespace LibMigration;
  */
 class Migration
 {
-  const VERSION = '1.0.1';
+  const VERSION = '1.0.2';
   const DEFAULT_CONFIG_FILE = 'migration.php';
 
   protected $config;
@@ -123,6 +123,8 @@ class Migration
    */
   public function status($databases = array())
   {
+    $this->checkAllMigrationFileList();
+
     if (!$databases) {
       // At default, processing all defined databases.
       $databases = $this->getDatabaseNames();
@@ -134,16 +136,16 @@ class Migration
     foreach ($databases as $database) {
       $version = $this->getSchemaVersion($database);
       if ($version !== null) {
-        $this->logger->write("[".$database."] Current schema version is ".$version);
+        $this->logger->write("Current schema version is ".$version, "[$database]");
       }
 
       $files = $this->getValidMigrationUpFileList($database, $version);
       if (count($files) === 0) {
-        $this->logger->write("[".$database."] Already up to date.");
+        $this->logger->write("Already up to date.", "[$database]");
         continue;
       }
 
-      $this->logger->write("[".$database."] Your migrations yet to be executed are below.");
+      $this->logger->write("Your migrations yet to be executed are below.", "[$database]");
       $this->logger->write("");
       foreach ($files as $file) {
         $this->logger->write(basename($file));
@@ -158,6 +160,8 @@ class Migration
    */
   public function migrate($databases = array())
   {
+    $this->checkAllMigrationFileList();
+
     if (!$databases) {
       // At default, processing all defined databases.
       $databases = $this->getDatabaseNames();
@@ -170,12 +174,12 @@ class Migration
       $version = $this->getSchemaVersion($database);
 
       if ($version !== null) {
-        $this->logger->write("[".$database."] Current schema version is ".$version);
+        $this->logger->write("Current schema version is ".$version, "[$database]");
       }
 
       $files = $this->getValidMigrationUpFileList($database, $version);
       if (count($files) === 0) {
-        $this->logger->write("[".$database."] Already up to date.");
+        $this->logger->write("Already up to date.", "[$database]");
         continue;
       }
 
@@ -191,6 +195,8 @@ class Migration
    */
   public function up($databases = array())
   {
+    $this->checkAllMigrationFileList();
+
     if (!$databases) {
       // At default, processing all defined databases.
       $databases = $this->getDatabaseNames();
@@ -203,12 +209,12 @@ class Migration
       $version = $this->getSchemaVersion($database);
 
       if ($version !== null) {
-        $this->logger->write("[".$database."] Current schema version is ".$version);
+        $this->logger->write("Current schema version is ".$version, "[$database]");
       }
 
       $files = $this->getValidMigrationUpFileList($database, $version);
       if (count($files) === 0) {
-        $this->logger->write("[".$database."] Already up to date.");
+        $this->logger->write("Already up to date.", "[$database]");
         continue;
       }
 
@@ -222,6 +228,8 @@ class Migration
    */
   public function down($databases = array())
   {
+    $this->checkAllMigrationFileList();
+
     if (!$databases) {
       // At default, processing all defined databases.
       $databases = $this->getDatabaseNames();
@@ -234,12 +242,12 @@ class Migration
       $version = $this->getSchemaVersion($database);
 
       if ($version !== null) {
-        $this->logger->write("[".$database."] Current schema version is ".$version);
+        $this->logger->write("Current schema version is ".$version, "[$database]");
       }
 
       $files = $this->getValidMigrationDownFileList($database, $version);
       if (count($files) === 0) {
-        $this->logger->write("[".$database."] Not found older migration files than current schema version.");
+        $this->logger->write("Not found older migration files than current schema version.", "[$database]");
         continue;
       }
 
@@ -300,6 +308,11 @@ END;
 
     file_put_contents($configpath, $cotent);
     $this->logger->write("Create configuration file to $configpath");
+  }
+
+  public function getConfig()
+  {
+    return $this->config;
   }
 
   protected function createMigrationTask($taskName, $timestamp, $database)
@@ -368,12 +381,12 @@ EOF;
 
     file_put_contents($filepath, $content);
 
-    $this->logger->write("[".$database."] Created ".$filepath);
+    $this->logger->write("Created ".$filepath, "[$database]");
   }
 
   protected function migrateUp($file, $database)
   {
-    $this->logger->write("[".$database."] Proccesing migrate up by ".basename($file)."");
+    $this->logger->write("Proccesing migrate up by ".basename($file)."", "[$database]");
 
     require_once $file;
 
@@ -413,7 +426,7 @@ EOF;
       $prev_version = 0;
     }
 
-    $this->logger->write("[".$database."] Proccesing migrate down to version $prev_version by ".basename($file)."");
+    $this->logger->write("Proccesing migrate down to version $prev_version by ".basename($file)."", "[$database]");
 
     require_once $file;
 
@@ -551,7 +564,7 @@ EOF;
 
   protected function getSchemaVersion($database)
   {
-    $this->logger->write("Getting schema version from '$database'", "debug");
+    $this->logger->write("Getting schema version from '$database'", null, "debug");
     if ($this->isCliExecution($database)) {
       // cli
       $table = $this->config->get('databases/'.$database.'/schema_version_table', 'schema_version');
@@ -564,7 +577,7 @@ EOF;
 
       // Check to exist table.
       if (count($arr) == 0) {
-        $this->logger->write("Table [".$table."] is not found. This schema hasn't been managed yet by PHPMigrate.", "debug");
+        $this->logger->write("Table [".$table."] is not found. This schema hasn't been managed yet by PHPMigrate.", null, "debug");
         return null;
       }
 
@@ -593,7 +606,7 @@ EOF;
 
       // Check to exist table.
       if (count($arr) == 0) {
-        $this->logger->write("Table [".$table."] is not found. This schema hasn't been managed yet by PHPMigrate.", "debug");
+        $this->logger->write("Table [".$table."] is not found. This schema hasn't been managed yet by PHPMigrate.", null, "debug");
         return null;
       }
 
@@ -697,14 +710,14 @@ EOF;
   {
     $path = $this->getTmpSqlFilePath($sql, $database);
 
-    $this->logger->write("Executing sql is the following \n".$sql, "debug");
-    $this->logger->write("Creating temporary sql file to [".$path."]", "debug");
+    $this->logger->write("Executing sql is the following \n".$sql, null, "debug");
+    $this->logger->write("Creating temporary sql file to [".$path."]", null, "debug");
     file_put_contents($path, $sql);
 
     $clibase = $this->getCliBase($database);
 
     $cmd = $clibase." < ".$path."  2>&1";
-    $this->logger->write("Executing command is [".$cmd."]", "debug");
+    $this->logger->write("Executing command is [".$cmd."]", null, "debug");
 
     //$output = shell_exec($cmd);
     exec($cmd, $output, $return_var);
@@ -794,6 +807,52 @@ EOF;
 
     sort($files);
     return $files;
+  }
+
+  /**
+   * Check migration file validation.
+   */
+  protected function checkAllMigrationFileList()
+  {
+    $databases = $this->getDatabaseNames();
+
+    $files = array();
+    $classes = array();
+
+    foreach ($databases as $database) {
+      $migration_dir = $this->config->get('databases/'.$database.'/migration_dir');
+
+      $gfiles = array();
+      if ($migration_dir) {
+        $gfiles = glob($migration_dir.'/*');
+      } else {
+        $gfiles = glob('*');
+      }
+
+      foreach ($gfiles as $file) {
+        if (preg_match("/^\d+_.+\.php$/", basename($file))) {
+
+          preg_match("/(\d+)_(.*)\.php$/", basename($file), $matches);
+          $version    = $matches[1];
+          $class_name = Utils::camelize($matches[2]);
+
+          $class_text = file_get_contents($file);
+
+          if (!preg_match("/class +$class_name/", $class_text)) {
+            throw new Exception("Unmatch defined class in the $file. You must define '$class_name' class in that file.");
+          }
+
+          // Check to exist same class name.
+          if (array_key_exists($class_name, $classes)) {
+            // Can't use same class name to migration tasks.
+            throw new Exception("Can't use same class name to migration tasks. Duplicate migration task name [".$classes[$class_name]."] and [".$file."].");
+          }
+
+          $classes[$class_name] = $file;
+          $files[] = $file;
+        }
+      }
+    }
   }
 
   protected function getSchemaVersionTebleCreateSQL($table, $pk = null)
