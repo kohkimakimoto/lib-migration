@@ -844,7 +844,8 @@ EOF;
           }
 
           // Check to exist same class name.
-          if (array_key_exists($class_name, $classes)) {
+          if (array_key_exists($class_name, $classes)
+            && $classes[$class_name] != $file) {
             // Can't use same class name to migration tasks.
             throw new Exception("Can't use same class name to migration tasks. Duplicate migration task name [".$classes[$class_name]."] and [".$file."].");
           }
