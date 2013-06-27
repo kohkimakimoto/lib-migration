@@ -102,12 +102,14 @@ return array(
 ```
 
 Under the array key `databases`, your database settings is written.
-You can write multiple database settings to manage same schema at multi databases.
+You can write multiple database settings.
 
 Difference between settings of `database_xxx` and `mysql_command_xxx` is database connection to execute migration SQL.
 At default, it uses `database_xxx` settings to connect database using PDO.
-You set up that `mysql_command_enable` is **true**. It uses `mysql_command_xxx` settings to connect databse using mysql client command.
-If you use `delimeter` command in your SQL. You need to use `mysql_command_xxx` settings. Because `delimeter` command is not a SQL.
+If you set up that `mysql_command_enable` is **true**. It uses `mysql_command_xxx` settings to connect databse using mysql client command instead of PDO.
+
+Which setting should I choose?
+If you use `delimeter` command in your migration SQL. You need to use `mysql_command_xxx` settings. Because `delimeter` command is not a SQL.
 It's a mysql client command.
 
 
