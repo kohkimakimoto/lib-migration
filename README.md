@@ -50,6 +50,7 @@ You will get `migration.php` file. Open and edit it to your environment like the
 ``` php
 <?php
 return array(
+  'colors' => true,
   'databases' => array(
     'yourdatabase' => array(
       // PDO Connection settings.
