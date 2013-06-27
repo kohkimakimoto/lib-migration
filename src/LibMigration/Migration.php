@@ -277,6 +277,7 @@ class Migration
     $cotent = <<<END
 <?php
 return array(
+  'colors' => true,
   'databases' => array(
     'yourdatabase' => array(
       // PDO Connection settings.
