@@ -1,4 +1,4 @@
 vendor/
-composer.lock
-migration.php
+/composer.lock
+/migration.php
 .project
