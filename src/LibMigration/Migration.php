@@ -701,7 +701,7 @@ EOF;
     $prefix = $database.'_'.md5($sql);
     $uniqid = uniqid();
 
-    $sqlfile = basename(__FILE__).".".$prefix.".".$uniqid.".sql";
+    $sqlfile = "libmigration.".$prefix.".".$uniqid.".sql";
     $path = $dir."/".$sqlfile;
 
     return $path;
