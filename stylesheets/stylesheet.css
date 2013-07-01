@@ -408,7 +408,7 @@ h6:before {
 }
 
 p {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 a {
@@ -428,7 +428,7 @@ blockquote {
 
 ul li {
   list-style: disc inside;
-  padding-left: 20px;
+  padding-left: 5px;
 }
 
 ol li {
