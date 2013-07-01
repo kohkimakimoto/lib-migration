@@ -21,6 +21,11 @@
     "phpunit/phpunit": "3.*",
     "phpunit/dbunit": "1.2.*"
   },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
+  },
   "bin": ["bin/phpmigrate"]
 
 }
