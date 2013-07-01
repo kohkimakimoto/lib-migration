@@ -13,7 +13,7 @@ namespace LibMigration;
  */
 class Migration
 {
-  const VERSION = '1.0.2';
+  const VERSION = '1.1.0';
   const DEFAULT_CONFIG_FILE = 'migration.php';
 
   protected $config;
