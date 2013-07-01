@@ -166,13 +166,15 @@ a:hover {
 
 header {
   padding-top: 40px;
-  padding-bottom: 40px;
+  padding-bottom: 0px;
   font-family: "SourceSansPro-Light", sans-serif;
   background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
   border-bottom: solid 1px #275da1;
 }
 
-header h1 {
+header h1,
+header h1 > a,
+header h1 > a:hover {
   letter-spacing: -1px;
   font-size: 72px;
   color: #fff;
@@ -333,7 +335,6 @@ form {
 }
 
 #main-content h1:before {
-  content: "/";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -0.9em;
@@ -344,10 +345,9 @@ form {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 8px;
-  color: #474747;
+  color: #5650a6;
 }
 #main-content h2:before {
-  content: "//";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -1.5em;
@@ -363,7 +363,6 @@ form {
 }
 
 #main-content h3:before {
-  content: "///";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -2em;
@@ -377,7 +376,6 @@ form {
 }
 
 h4:before {
-  content: "////";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -2.8em;
@@ -389,7 +387,6 @@ h4:before {
   color: #474747;
 }
 h5:before {
-  content: "/////";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -3.2em;
@@ -401,7 +398,6 @@ h5:before {
   color: #474747;
 }
 h6:before {
-  content: "//////";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -3.7em;
@@ -572,6 +568,32 @@ footer a:hover {
     margin-left: 0;
   }
 }
+
+.menu {
+  min-height: 80px;
+}
+.menu ul {
+  display: block;
+  float: left;
+  margin: 30px 10px 0 0;
+}
+
+.menu ul li {
+  list-style: none outside none;
+  padding-left: 0;
+  padding-right: 30px;
+  display: list-item;
+  float: left;
+}
+
+.menu ul li a {
+  font-family: Arial, sans-serif;
+  font-size: 25px;
+  display: block;
+  color: #ffffff;
+  float: none;
+}
+
 
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
 @media only screen and (min-width: 480px) and (max-width: 767px) {}
