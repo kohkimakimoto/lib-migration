@@ -5,6 +5,15 @@ use LibMigration\Migration;
 
 class MigrationTest extends \PHPUnit_Extensions_Database_TestCase
 {
+  protected function setUp()
+  {
+    parent::setUp();
+
+    $conn = $this->getConnection()->getConnection();
+    $conn->exec("drop database lib_migration_test;");
+    $conn->exec("create database lib_migration_test;");
+  }
+
   /**
    * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
    */
@@ -76,47 +85,74 @@ EOF;
     $migration->status();
   }
 
-  /*
-  public function testStatus3()
-  {
-    $expect = <<<EOF
-[migration_lib_test] Your migrations yet to be executed are below.
-
-20130613185549_test01.php
-
-
-EOF;
-
-    $this->expectOutputString($expect);
-
-    $migration = new Migration(array(
-      'databases' => array(
-        'migration_lib_test' => array(
-          'database_pdo' => new \PDO('mysql:dbname=migration_lib_test;host=127.0.0.1', 'test_user', 'test_user'),
-        ),
-      ),
-      'migration_dir' => __DIR__."/../data/migration01",
-    ));
-    $migration->status();
-
-  }
-  */
-
   public function testUp()
   {
     $migration = new Migration(array(
-      'databases' => array(
-        'migration_lib_test' => array(
-          'database_pdo' => new \PDO('mysql:dbname=lib_migration_test;host=127.0.0.1', 'test_user', 'test_user'),
-          'schema_version_table_pk_column' => 'id',
-          'schema_version_table_pk_value'  => 'test',
-        ),
+        'colors' => true,
+        'databases' => array(
+          'migration_lib_test' => array(
+            'database_pdo' => new \PDO('mysql:dbname=lib_migration_test;host=127.0.0.1', 'test_user', 'test_user'),
+            'schema_version_table_pk_column' => 'id',
+            'schema_version_table_pk_value'  => 'test',
+            'migration_dir' => __DIR__."/../data/migration01",
+          ),
       ),
-      'migration_dir' => __DIR__."/../data/migration01",
+
     ));
 
     $migration->up();
+
+    $conn = $this->getConnection()->getConnection();
+    $conn->exec("select * from sample;");
   }
 
+  /**
+   * @expectedException PDOException
+   */
+  public function testDown()
+  {
+    $migration = new Migration(array(
+        'databases' => array(
+            'colors' => true,
+            'migration_lib_test' => array(
+                'database_pdo' => new \PDO('mysql:dbname=lib_migration_test;host=127.0.0.1', 'test_user', 'test_user'),
+                'schema_version_table_pk_column' => 'id',
+                'schema_version_table_pk_value'  => 'test',
+                'migration_dir' => __DIR__."/../data/migration01",
+            ),
+        ),
+
+    ));
+
+    $migration->down();
+
+    $conn = $this->getConnection()->getConnection();
+    $conn->exec("select * from sample;");
+  }
+
+  public function testMigrate()
+  {
+    $migration = new Migration(array(
+        'colors' => true,
+        'databases' => array(
+            'migration_lib_test' => array(
+                'database_pdo' => new \PDO('mysql:dbname=lib_migration_test;host=127.0.0.1', 'test_user', 'test_user'),
+                'schema_version_table_pk_column' => 'id',
+                'schema_version_table_pk_value'  => 'test',
+                'migration_dir' => __DIR__."/../data/migration02",
+            ),
+        ),
+
+    ));
+
+    $migration->migrate();
+
+    $conn = $this->getConnection()->getConnection();
+    $conn->exec("select * from sample;");
+
+    $conn = $this->getConnection()->getConnection();
+    $conn->exec("select * from sample2;");
+
+  }
 
 }
