@@ -15,7 +15,7 @@ Below are the teatures of LibMigration.
 
 * LibMigration core api is very simple. So you can easily use it in your other code.
 
-Are you interested in it ?
+Are you interested in it?
 See the <a href="documentation.html">Documentation</a> to get more information.
 
 ## License

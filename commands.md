@@ -1,6 +1,6 @@
 ---
 layout: default
-title: LibMigration Command
+title: Commands - LibMigration
 ---
 
 ## Commands

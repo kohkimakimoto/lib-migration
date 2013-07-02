@@ -1,6 +1,6 @@
 ---
 layout: default
-title: LibMigration Documentation
+title: Documentation - LibMigration
 ---
 
 ## Documentation
