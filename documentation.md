@@ -7,7 +7,7 @@ title: LibMigration
 
 ### Requrement
 
-* PHP5.3 or later.
+PHP5.3 or later.
 
 ### Installation
 
