@@ -13,11 +13,13 @@ PHP5.3 or later.
 
 Use composer installation. Make composer.json like the following.
 
-    {
-      "require": {
-        "kohkimakimoto/lib-migration": "~1.0"
-      }
-    }
+<pre class="javascript">
+{
+  "require": {
+    "kohkimakimoto/lib-migration": "~1.0"
+  }
+}
+</pre>
 
 ### Usage
 

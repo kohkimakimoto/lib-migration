@@ -166,7 +166,7 @@ a:hover {
 
 header {
   padding-top: 40px;
-  padding-bottom: 0px;
+  padding-bottom: 40px;
   font-family: "SourceSansPro-Light", sans-serif;
   background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
   border-bottom: solid 1px #275da1;
@@ -227,6 +227,25 @@ aside#sidebar p.repo-owner a {
   font-weight: bold;
 }
 
+aside#sidebar .side-content h3 {
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+aside#sidebar .side-content ul {
+  margin: 0;
+}
+aside#sidebar .side-content ul li {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+  padding-bottom: 10px;
+}
+
+aside#sidebar .side-content ul li a {
+  font-size: 18px;
+}
+
+
 #downloads {
   margin-bottom: 40px;
 }
@@ -274,7 +293,7 @@ code {
 }
 
 pre {
-  padding: 20px;
+  padding: 10px;
   background: #fff;
   text-shadow: none;
   overflow: auto;
@@ -594,6 +613,26 @@ footer a:hover {
   float: none;
 }
 
+.region {
+  padding-bottom: 20px;
+}
+
+.snippet-wrap .snippet-num {
+margin: 5px;
+padding-left: 3em;
+}
+.snippet-wrap pre.sh_sourceCode {
+padding: 0;
+line-height: 1.8em;
+overflow: auto;
+position: relative;
+-moz-border-radius: 0px;
+-webkit-border-radius: 0px;
+border-radius: 0px;
+box-shadow: none;
+-moz-box-shadow: none;
+-webkit-box-shadow: none;
+}
 
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
 @media only screen and (min-width: 480px) and (max-width: 767px) {}
