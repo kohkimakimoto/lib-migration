@@ -69,3 +69,36 @@ $ php bin/phpmigrate init
 You will get `migration.php` file that is core configuration file. Open and edit it to your environment like the following.
 
 
+<pre class="php">
+
+return array(
+  'colors' => true,
+  'databases' => array(
+    'yourdatabase' => array(
+      // PDO Connection settings.
+      'database_dsn'      => 'mysql:dbname=yourdatabase;host=localhost',
+      'database_user'     => 'user',
+      'database_password' => 'password',
+
+      // schema version table
+      'schema_version_table' => 'schema_version',
+      ,
+      // directory contains migration task files.
+      'migration_dir' => './databases/yourdatabase'
+    ),
+    'yourdatabase2' => array(
+       // Second database setting...
+    ),
+  ),
+);
+</pre>
+
+Under the array key `databases`, your database settings is written.
+You can write multiple database settings.
+
+### Create migration class file
+
+
+
+
+
