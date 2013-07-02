@@ -35,25 +35,25 @@ $ php composer.phar install
 
 LibMigration bundles simple command line interface `phpmigrate`.
 You can use it to manage your database schema migrations.
-At default, it's placed under the `/bin` directory in your project.
+At default, it's placed under the `vendor/bin` directory in your project.
 
 <pre class="sh">
-$ php bin/phpmigrate init
+$ php vendor/bin/phpmigrate init
 # => Create skeleton configuration file in the current working directory.
 
-$ php bin/phpmigrate create
+$ php vendor/bin/phpmigrate create
 # => Create new skeleton migration task file
 
-$ php bin/phpmigrate status
+$ php vendor/bin/phpmigrate status
 # => List the migrations yet to be executed.
 
-$ php bin/phpmigrate migrate
+$ php vendor/bin/phpmigrate migrate
 # => Execute the next migrations up.
 
-$ php bin/phpmigrate up
+$ php vendor/bin/phpmigrate up
 # => Execute the next migration up.
 
-$ php bin/phpmigrate down
+$ php vendor/bin/phpmigrate down
 # => Execute the next migration down.
 </pre>
 
@@ -63,7 +63,7 @@ $ php bin/phpmigrate down
 Run the below command to create a configuration file.
 
 <pre class="sh">
-$ php bin/phpmigrate init
+$ php vendor/bin/phpmigrate init
 </pre>
 
 You will get `migration.php` file that is core configuration file.
@@ -140,7 +140,7 @@ Because `delimeter` command is not a SQL. Actually, it's a mysql client command.
 Run the following command.
 
 <pre class="sh">
-$ php bin/phpmigrate create create_sample_table
+$ php vendor/bin/phpmigrate create create_sample_table
 </pre>
 
 You will get the following messages and the skeleton migration class file.
@@ -200,7 +200,7 @@ class YourdatabaseCreateSampleTable
 OK. You are ready to execute migrate command. Run the following command.
 
 <pre class="sh">
-$ php bin/phpmigrate migrate
+$ php vendor/bin/phpmigrate migrate
 </pre>
 
 This commad will create your sample table.
