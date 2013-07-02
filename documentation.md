@@ -5,13 +5,15 @@ title: LibMigration
 
 ## Documentation
 
+
 ### Requrement
 
 PHP5.3 or later.
 
+
 ### Installation
 
-Use composer installation. Make composer.json like the following.
+Use composer installation. Make `composer.json` file like the following.
 
 <pre class="javascript">
 {
@@ -21,6 +23,49 @@ Use composer installation. Make composer.json like the following.
 }
 </pre>
 
-### Usage
+And run composer install command.
 
-LibMigration bundles simple command line interface `phpmigrate`. You can use it to manage your database schema migrations.
+<pre class="sh">
+$ curl -s http://getcomposer.org/installer | php
+$ php composer.phar install
+</pre>
+
+
+### Basic Usage
+
+LibMigration bundles simple command line interface `phpmigrate`.
+You can use it to manage your database schema migrations.
+At default, it's placed under the `/bin` directory in your project.
+
+<pre class="sh">
+$ php bin/phpmigrate init
+# => Create skeleton configuration file in the current working directory.
+
+$ php bin/phpmigrate create
+# => Create new skeleton migration task file
+
+$ php bin/phpmigrate status
+# => List the migrations yet to be executed.
+
+$ php bin/phpmigrate migrate
+# => Execute the next migrations up.
+
+$ php bin/phpmigrate up
+# => Execute the next migration up.
+
+$ php bin/phpmigrate down
+# => Execute the next migration down.
+</pre>
+
+
+### Configurations
+
+Run the below command to create a configuration file.
+
+<pre class="shell">
+$ php bin/phpmigrate init
+</pre>
+
+You will get `migration.php` file that is core configuration file. Open and edit it to your environment like the following.
+
+
