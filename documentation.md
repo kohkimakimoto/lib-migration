@@ -205,3 +205,33 @@ $ php vendor/bin/phpmigrate migrate
 
 This commad will create your sample table.
 
+### Recommended directory structure
+
+I recommend below directory structure to use LibMigration.
+
+<pre class="sh">
+
+project/  # &lt;- your migration package root
+    composer.json
+    composer.lock
+    databases/   # &lt;- your migrations directory
+             db1/
+                 20130703020613_db1_migration1.php
+                 20130703020616_db1_migration2.php
+                 20130703020617_db1_migration3.php
+                 ...
+             db2/
+                 20130703020613_db2_migration1.php
+                 20130703020616_db2_migration2.php
+                 ...
+             ...
+    migration.php
+    vendor/  # &lt;- composer vendor directory
+           bin/
+               phpmigrate  # &lt;- phpmigrate command
+           composer/
+           kohkimakimoto/
+               lib-migration/  # &lt;- LibMigration Pacakge
+
+</pre>
+
