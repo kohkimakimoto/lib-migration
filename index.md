@@ -18,6 +18,14 @@ Below are the teatures of LibMigration.
 Are you interested in it?
 See the <a href="documentation.html">Documentation</a> to get more information.
 
-## License
+### License
 
 LibMigration is licesed Apache License 2.0.
+
+### Github Repository
+
+[https://github.com/kohkimakimoto/lib-migration](https://github.com/kohkimakimoto/lib-migration)
+
+### Bug Reports
+
+If you find a bug, Please report it by [Github issues](https://github.com/kohkimakimoto/lib-migration/issues).
