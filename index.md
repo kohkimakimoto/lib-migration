@@ -7,7 +7,7 @@ title: LibMigration
 
 LibMigration is a minimum database migration library and framework for MySQL.
 It provides a convenient way to alter your MySQL database schema.
-Below are the teatures of LibMigration.
+Below are the features of LibMigration.
 
 * LibMigration uses plain SQL to change your database schema. Don't use any specific syntax.
 
