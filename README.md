@@ -21,7 +21,7 @@ Use composer installation. Make `composer.json` like the following.
 ``` json
 {
   "require": {
-    "kohkimakimoto/lib-migration": "~1.0"
+    "kohkimakimoto/lib-migration": "1.*"
   }
 }
 ```
