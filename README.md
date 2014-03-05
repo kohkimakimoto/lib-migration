@@ -4,17 +4,15 @@
 
 LibMigration is a minimum database migration library and framework for MySQL.
 
-It's PHP program restructured from [PHPMigrate](https://github.com/kohkimakimoto/phpmigrate) to use easily in other PHP products.
-
 ## Features
 
-* LibMigration use plain SQL to change your database schema. Don’t use any specific syntax.
+* LibMigration uses plain SQL to change your database schema. Does’t use any specific syntax.
 * LibMigration can manage muliple databases.
 * LibMigration core api is very simple. So you can easily use it in your other code.
 
-## Requrement
+## Requirement
 
-  * PHP5.3 or later.
+PHP5.3 or later.
 
 ## Installation
 
@@ -39,7 +37,7 @@ See the [LibMigraion Github page](http://kohkimakimoto.github.io/lib-migration/)
 
 ## License
 
-  Apache License 2.0
+Apache License 2.0
 
 
 
