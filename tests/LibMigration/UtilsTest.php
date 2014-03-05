@@ -34,27 +34,5 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('aaa_eee_bbb', Utils::underscore("AaaEeeBbb"));
   }
 
-  public function testPregtr()
-  {
-    $ret = Utils::pregtr(
-      "aaaBbbCcc", 
-      array(
-        '/([A-Z]+)([A-Z][a-z])/' => '\\1_\\2',
-        '/([a-z\d])([A-Z])/' => '\\1_\\2'
-      )
-    );
-
-    $this->assertEquals("aaa_Bbb_Ccc", $ret);
-
-    $ret = Utils::pregtr(
-      "aaa_bbb_ccc", 
-      array(
-        '#/(.?)#e'    => "'::'.strtoupper('\\1')",
-        '/(^|_|-)+(.)/e' => "strtoupper('\\2')"
-      )
-    );
-
-    $this->assertEquals("AaaBbbCcc", $ret);
-  }
 
 }
