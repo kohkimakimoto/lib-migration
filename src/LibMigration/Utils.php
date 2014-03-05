@@ -30,11 +30,10 @@ class Utils
   }
 
   /*
-   The Following Methods are copied from symfony web application framework version 1.4. (http://symfony.com/).
-  */
+  The Following Methods are copied from symfony.
+  https://github.com/symfony/DependencyInjection/blob/master/Container.php
 
-  /*
-   Copyright (c) 2004-2010 Fabien Potencier
+  Copyright (c) 2004-2014 Fabien Potencier
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -55,48 +54,13 @@ class Utils
   THE SOFTWARE.
   */
 
-  /**
-   * Returns a camelized string from a lower case and underscored string by replaceing slash with
-  * double-colon and upper-casing each letter preceded by an underscore.
-  *
-  * @param  string $lower_case_and_underscored_word  String to camelize.
-  *
-  * @return string Camelized string.
-  */
-  public static function camelize($lower_case_and_underscored_word)
+  public static function camelize($id)
   {
-    $tmp = $lower_case_and_underscored_word;
-    $tmp = self::pregtr($tmp, array('#/(.?)#e'    => "'::'.strtoupper('\\1')",
-        '/(^|_|-)+(.)/e' => "strtoupper('\\2')"));
-
-    return $tmp;
+    return strtr(ucwords(strtr($id, array('_' => ' ', '.' => '_ ', '\\' => '_ '))), array(' ' => ''));
   }
 
-  /**
-   * Returns an underscore-syntaxed version or the CamelCased string.
-   *
-   * @param  string $camel_cased_word  String to underscore.
-   *
-   * @return string Underscored string.
-   */
-  public static function underscore($camel_cased_word)
+  public static function underscore($id)
   {
-    $tmp = $camel_cased_word;
-    $tmp = str_replace('::', '/', $tmp);
-    $tmp = self::pregtr($tmp, array('/([A-Z]+)([A-Z][a-z])/' => '\\1_\\2',
-        '/([a-z\d])([A-Z])/'     => '\\1_\\2'));
-
-    return strtolower($tmp);
-  }
-
-  /**
-   * Returns subject replaced with regular expression matchs
-   *
-   * @param mixed $search        subject to search
-   * @param array $replacePairs  array of search => replace pairs
-   */
-  public static function pregtr($search, $replacePairs)
-  {
-    return preg_replace(array_keys($replacePairs), array_values($replacePairs), $search);
+    return strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'), array('\\1_\\2', '\\1_\\2'), strtr($id, '_', '.')));
   }
 }

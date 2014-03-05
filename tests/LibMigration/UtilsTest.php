@@ -34,9 +34,5 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('aaa_eee_bbb', Utils::underscore("AaaEeeBbb"));
   }
 
-  public function testPregtr()
-  {
-    // Nothing to do.
-  }
 
 }
